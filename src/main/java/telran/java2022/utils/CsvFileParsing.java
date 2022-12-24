@@ -13,17 +13,23 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+import lombok.RequiredArgsConstructor;
+import telran.java2022.dao.DataRepository;
 import telran.java2022.model.HistoricalData;
 
+@RequiredArgsConstructor
 public class CsvFileParsing {
 
+	final DataRepository dataRepository;
 	public static List<HistoricalData> parsingWithApache() {
 		List<HistoricalData> datas = new ArrayList<>();
 
-		try (BufferedReader br = new BufferedReader(new FileReader("HistoricalData1month.csv"));
+		try (BufferedReader br = new BufferedReader(new FileReader("HistoricalData1months.csv"));
 				CSVParser csvParser = new CSVParser(br,
 						CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase())) {
 			List<CSVRecord> csvRecords = csvParser.getRecords();
+
+			
 			datas = csvRecords.stream().map(CsvFileParsing::fillData).collect(Collectors.toList());
 
 //
@@ -49,7 +55,9 @@ public class CsvFileParsing {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		return datas;
+		
 	}
 
 	private static HistoricalData fillData(CSVRecord csvRecord) {
@@ -70,7 +78,7 @@ public class CsvFileParsing {
 	public static List<HistoricalData> parsingWithoutApache() {
 		List<HistoricalData> datas = new ArrayList<>();
 
-		try (BufferedReader br = new BufferedReader(new FileReader("HistoricalData1month.csv"))) {
+		try (BufferedReader br = new BufferedReader(new FileReader("HistoricalData1months.csv"))) {
 			br.readLine();
 
 			String line = "";
@@ -89,6 +97,7 @@ public class CsvFileParsing {
 									Double.parseDouble(col[3]), 
 									Double.parseDouble(col[4]), 
 									Double.parseDouble(col[5]));
+				
 				datas.add(data);
 			}
 
