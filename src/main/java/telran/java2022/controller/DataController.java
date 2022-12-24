@@ -1,6 +1,7 @@
 package telran.java2022.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,8 +16,8 @@ public class DataController {
 
 	final DataService dataService;
 	
-	@GetMapping("/data/date")
-	public DataDto findByDate(@RequestBody DateDto date) {
+	@PostMapping("/data/{date}")
+	public DataDto findByDate(@PathVariable String date) {
 		return dataService.findByDate(date);
 		
 	}

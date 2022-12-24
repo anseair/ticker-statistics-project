@@ -1,6 +1,7 @@
 package telran.java2022.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 
@@ -16,9 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class DataDto {
-	String id;
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	LocalDate date;
+	String date;
 	Double close_last;
 	String volume;
 	Double open;

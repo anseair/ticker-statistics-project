@@ -2,9 +2,12 @@ package telran.java2022.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import org.apache.commons.csv.CSVRecord;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 import lombok.AllArgsConstructor;
@@ -14,20 +17,20 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"date"})
+public class HistoricalData{
 
-@EqualsAndHashCode(of = {"id"})
-public class HistoricalData implements Serializable {
-
-	private static final long serialVersionUID = -9134665312805093000L;
-	String id;
-	LocalDate date;
+	@Id
+	String date;
+//	LocalDateTime date;
 	Double close_last;
 	String volume;
 	Double open;
 	Double high;
 	Double low;
 
-	public HistoricalData(LocalDate date, Double close_last, String volume, Double open, Double high, Double low) {
+	
+	public HistoricalData(String date, Double close_last, String volume, Double open, Double high, Double low) {
 		this.date = date;
 		this.close_last = close_last;
 		this.volume = volume;
@@ -37,7 +40,12 @@ public class HistoricalData implements Serializable {
 	}
 	
 	public static HistoricalData fromCsv(CSVRecord csvRecord) {
-		return new HistoricalData(LocalDate.parse(csvRecord.get(0), DateTimeFormatter.ofPattern("MM/dd/yyyy")), 
+//		String[] dateArr = csvRecord.get(0).split("/");
+//		LocalDateTime date = LocalDateTime.of(
+//				Integer.parseInt(dateArr[2]), 
+//				Integer.parseInt(dateArr[0]),
+//				Integer.parseInt(dateArr[1]), 05, 00);
+		return new HistoricalData(csvRecord.get(0).replace("/", "-"), 
 				Double.parseDouble(csvRecord.get(1)),
 				csvRecord.get(2),
 				Double.parseDouble(csvRecord.get(3)),
