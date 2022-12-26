@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -17,14 +18,13 @@ import lombok.RequiredArgsConstructor;
 import telran.java2022.dao.DataRepository;
 import telran.java2022.model.HistoricalData;
 
-@RequiredArgsConstructor
 public class CsvFileParsing {
 
-	final DataRepository dataRepository;
+	
 	public static List<HistoricalData> parsingWithApache() {
 		List<HistoricalData> datas = new ArrayList<>();
 
-		try (BufferedReader br = new BufferedReader(new FileReader("HistoricalData1months.csv"));
+		try (BufferedReader br = new BufferedReader(new FileReader("HistoricalData6months.csv"));
 				CSVParser csvParser = new CSVParser(br,
 						CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase())) {
 			List<CSVRecord> csvRecords = csvParser.getRecords();
@@ -76,6 +76,8 @@ public class CsvFileParsing {
 	
 	
 	public static List<HistoricalData> parsingWithoutApache() {
+		
+		
 		List<HistoricalData> datas = new ArrayList<>();
 
 		try (BufferedReader br = new BufferedReader(new FileReader("HistoricalData1months.csv"))) {
@@ -100,7 +102,7 @@ public class CsvFileParsing {
 				
 				datas.add(data);
 			}
-
+			
 			System.out.println();
 			System.out.println(datas.size());
 			System.out.println(datas.get(0));
