@@ -5,13 +5,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import lombok.RequiredArgsConstructor;
-import telran.java2022.dao.DataRepository;
+import telran.java2022.dao.SandPRepository;
 import telran.java2022.utils.CsvFileParsing;
 
 @SpringBootApplication
 @RequiredArgsConstructor
 public class FirstProjectApplication {
-	final DataRepository dataRepository;
+	final SandPRepository dataRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(FirstProjectApplication.class, args);
