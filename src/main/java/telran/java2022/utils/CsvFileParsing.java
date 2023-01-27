@@ -20,7 +20,7 @@ public class CsvFileParsing {
 
 	
 	public static List<SandP> parsingWithApache() {
-		List<SandP> datas = new ArrayList<>();
+		List<SandP> res = new ArrayList<>();
 
 		try (BufferedReader br = new BufferedReader(new FileReader("HistoricalData6months.csv"));
 				CSVParser csvParser = new CSVParser(br,
@@ -28,28 +28,29 @@ public class CsvFileParsing {
 			List<CSVRecord> csvRecords = csvParser.getRecords();
 
 			
-			datas = csvRecords.stream().map(CsvFileParsing::fillData).collect(Collectors.toList());
+			res = csvRecords.stream().map(CsvFileParsing::fillData).collect(Collectors.toList());
 
 			System.out.println();
-			System.out.println(datas.size());
-			System.out.println(datas.get(0));
-			System.out.println(datas.get(1));
-			System.out.println(datas.get(2));
+			System.out.println(res.size());
+			System.out.println(res.get(0));
+			System.out.println(res.get(1));
+			System.out.println(res.get(2));
 			System.out.println();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return datas;
+		return res;
 		
 	}
 
 	private static SandP fillData(CSVRecord csvRecord) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 		LocalDate date = LocalDate.parse(csvRecord.get(0), formatter);
-	    double close = Double.parseDouble(csvRecord.get(4));
-	    SandP res = new SandP(new SandPDate("S&P", date), close);
+		
+	    double price = Double.parseDouble(csvRecord.get(1));
+	    SandP res = new SandP(new SandPDate("S&P", date), price);
 		return res;
 	}
 	
@@ -57,7 +58,7 @@ public class CsvFileParsing {
 	public static List<SandP> parsingWithoutApache() {
 		
 		
-		List<SandP> datas = new ArrayList<>();
+		List<SandP> res = new ArrayList<>();
 
 		try (BufferedReader br = new BufferedReader(new FileReader("HistoricalData1months.csv"))) {
 			br.readLine();
@@ -65,29 +66,29 @@ public class CsvFileParsing {
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				String[] col = line.split(",");
-				datas.add(fillSandP(col));
+				res.add(fillSandP(col));
 				line = br.readLine();
 				
 			}
 //			
 //			System.out.println();
-//			System.out.println(datas.size());
-//			System.out.println(datas.get(0));
-//			System.out.println(datas.get(1));
-//			System.out.println(datas.get(2));
+//			System.out.println(res.size());
+//			System.out.println(res.get(0));
+//			System.out.println(res.get(1));
+//			System.out.println(res.get(2));
 //			System.out.println();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return datas;
+		return res;
 	}
 
 	private static SandP fillSandP(String[] arr) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 		LocalDate date = LocalDate.parse(arr[0], formatter);
-	    double close = Double.parseDouble(arr[4]);
-	    SandP res = new SandP(new SandPDate("S&P", date), close);
+	    double price = Double.parseDouble(arr[1]);
+	    SandP res = new SandP(new SandPDate("S&P", date), price);
 		return res;
 	}
 }

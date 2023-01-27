@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import telran.java2022.dto.DatePeriodDto;
 import telran.java2022.dto.SandPDto;
 import telran.java2022.model.SandPDate;
 import telran.java2022.service.SandPService;
@@ -49,5 +50,14 @@ public class SandPController {
 		return sandPService.update(new SandPDate("S&P", localDate), priceClose);
 	}
 	
+	@PostMapping("/sandp/max/period")
+	public SandPDto findMaxPriceByDatePeriod(@RequestBody DatePeriodDto datePeriodDto) {
+		return sandPService.findMaxPriceByDatePeriod(datePeriodDto);
+	}
+	
+	@PostMapping("/sandp/min/period")
+	public SandPDto findMinPriceByDatePeriod(@RequestBody DatePeriodDto datePeriodDto) {
+		return sandPService.findMinPriceByDatePeriod(datePeriodDto);
+	}
 	
 }

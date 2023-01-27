@@ -1,6 +1,7 @@
 package telran.java2022.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import telran.java2022.dao.SandPRepository;
+import telran.java2022.dto.DatePeriodDto;
 import telran.java2022.dto.SandPDto;
 import telran.java2022.exceptoins.DateExistsException;
 import telran.java2022.exceptoins.NotFoundException;
@@ -55,7 +57,20 @@ public class SandPServiceImpl implements SandPService, CommandLineRunner {
 		return modelMapper.map(sandp, SandPDto.class);
 	}
 
-	
+
+	@Override
+	public SandPDto findMaxPriceByDatePeriod(DatePeriodDto datePeriodDto) {
+		return repository.findByDateDateBetween(datePeriodDto.getDateFrom(), datePeriodDto.getDateTo())
+				.map(e -> modelMapper.map(e, SandPDto.class))
+				.collect(Collectors.toList()).stream().max(Comparator.comparing(SandPDto::getPriceClose)).get();
+	}
+
+	@Override
+	public SandPDto findMinPriceByDatePeriod(DatePeriodDto datePeriodDto) {
+		return repository.findByDateDateBetween(datePeriodDto.getDateFrom(), datePeriodDto.getDateTo())
+				.map(e -> modelMapper.map(e, SandPDto.class))
+				.collect(Collectors.toList()).stream().min(Comparator.comparing(SandPDto::getPriceClose)).get();
+	}
 	
 //	===================== VARIANT 1: add in set ============================
 //	@Override
@@ -124,5 +139,6 @@ public class SandPServiceImpl implements SandPService, CommandLineRunner {
 		}
 
 	}
+
 
 }
