@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import lombok.RequiredArgsConstructor;
-import telran.java2022.dao.SandPRepository;
+import telran.java2022.sandp.dao.SandPRepository;
 import telran.java2022.utils.CsvFileParsing;
 
 @SpringBootApplication

@@ -1,4 +1,4 @@
-package telran.java2022.dto;
+package telran.java2022.sandp.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

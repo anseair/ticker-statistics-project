@@ -1,4 +1,4 @@
-package telran.java2022.exceptoins;
+package telran.java2022.sandp.exceptoins;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

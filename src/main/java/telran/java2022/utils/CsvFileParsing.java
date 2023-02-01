@@ -13,8 +13,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import telran.java2022.model.SandP;
-import telran.java2022.model.SandPDate;
+import telran.java2022.sandp.model.SandP;
+import telran.java2022.sandp.model.SandPDate;
 
 public class CsvFileParsing {
 
@@ -22,7 +22,7 @@ public class CsvFileParsing {
 	public static List<SandP> parsingWithApache() {
 		List<SandP> res = new ArrayList<>();
 
-		try (BufferedReader br = new BufferedReader(new FileReader("HistoricalData6months.csv"));
+		try (BufferedReader br = new BufferedReader(new FileReader("HistoricalData5years.csv"));
 				CSVParser csvParser = new CSVParser(br,
 						CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase())) {
 			List<CSVRecord> csvRecords = csvParser.getRecords();

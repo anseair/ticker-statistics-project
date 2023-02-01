@@ -1,4 +1,4 @@
-package telran.java2022.model;
+package telran.java2022.sandp.model;
 
 import java.time.LocalDate;
 

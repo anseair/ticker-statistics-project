@@ -1,4 +1,4 @@
-package telran.java2022.controller;
+package telran.java2022.sandp.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import telran.java2022.dto.DatePeriodDto;
-import telran.java2022.dto.SandPDto;
-import telran.java2022.model.SandPDate;
-import telran.java2022.service.SandPService;
+import telran.java2022.sandp.dto.DatePeriodDto;
+import telran.java2022.sandp.dto.SandPDto;
+import telran.java2022.sandp.dto.SandPStatDto;
+import telran.java2022.sandp.model.SandPDate;
+import telran.java2022.sandp.service.SandPService;
 
 @RequiredArgsConstructor
 @RestController
@@ -60,4 +61,9 @@ public class SandPController {
 		return sandPService.findMinPriceByDatePeriod(datePeriodDto);
 	}
 	
+	@GetMapping("/sandp/{periodYears}/{sum}/{termYears}")
+	public SandPStatDto getStat(@PathVariable long periodYears, @PathVariable double sum, @PathVariable long termYears ) {
+		return sandPService.getStat(periodYears, sum, termYears);
+		
+	}
 }

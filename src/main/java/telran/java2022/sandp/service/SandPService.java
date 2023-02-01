@@ -1,8 +1,9 @@
-package telran.java2022.service;
+package telran.java2022.sandp.service;
 
-import telran.java2022.dto.DatePeriodDto;
-import telran.java2022.dto.SandPDto;
-import telran.java2022.model.SandPDate;
+import telran.java2022.sandp.dto.DatePeriodDto;
+import telran.java2022.sandp.dto.SandPDto;
+import telran.java2022.sandp.dto.SandPStatDto;
+import telran.java2022.sandp.model.SandPDate;
 
 public interface SandPService {
 
@@ -17,5 +18,7 @@ public interface SandPService {
 	SandPDto findMaxPriceByDatePeriod(DatePeriodDto datePeriodDto);
 	
 	SandPDto findMinPriceByDatePeriod(DatePeriodDto datePeriodDto);
+	
+	SandPStatDto getStat(long periodDays, double sum, long termDays);
 
 }
