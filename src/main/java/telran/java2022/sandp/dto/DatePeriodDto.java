@@ -1,4 +1,4 @@
-package telran.java2022.dto;
+package telran.java2022.sandp.dto;
 
 import java.time.LocalDate;
 
@@ -7,7 +7,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 
 @Getter
-public class DateDto {
+public class DatePeriodDto {
+	
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	LocalDate date;
+	LocalDate dateFrom;
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	LocalDate dateTo;
 }

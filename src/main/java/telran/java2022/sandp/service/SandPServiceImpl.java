@@ -1,16 +1,14 @@
 package telran.java2022.sandp.service;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.apache.commons.csv.CSVRecord;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
@@ -24,7 +22,7 @@ import telran.java2022.sandp.exceptoins.DateExistsException;
 import telran.java2022.sandp.exceptoins.NotFoundException;
 import telran.java2022.sandp.model.SandP;
 import telran.java2022.sandp.model.SandPDate;
-import telran.java2022.utils.CsvFileParsing;
+import telran.java2022.utils.SandPCsvParsing;
 
 @RequiredArgsConstructor
 @Service
@@ -179,26 +177,28 @@ public class SandPServiceImpl implements SandPService, CommandLineRunner {
 //		}
 //	}
 
+	
+	
 //	===================== VARIANT 2: add in list by stream ======================
 	@Override
 	public void run(String... args) throws Exception {
 
 		List<SandP> notExistsDatas = new ArrayList<>();
 
-		List<SandP> newDatas = CsvFileParsing.parsingWithApache();
+		List<SandP> newDatas = SandPCsvParsing.parsingWithApache();
 
-		System.out.println("new datas: " + newDatas.size());
+		System.out.println("amount of data in csv: " + newDatas.size());
 
 		List<SandP> oldDatas = StreamSupport.stream(repository.findAll().spliterator(), false)
 				.collect(Collectors.toList());
 
-		System.out.println("before add in db: " + oldDatas.size());
+		System.out.println("amount data before add in db: " + oldDatas.size());
 
 		if (oldDatas.isEmpty()) {
 			oldDatas.addAll(newDatas);
 			repository.saveAll(oldDatas);
 
-			System.out.println("after add in db: " + oldDatas.size());
+			System.out.println("amount data after add in db: " + oldDatas.size());
 
 		} else {
 //			if (!newDatas.containsAll(oldDatas)) {
@@ -207,11 +207,13 @@ public class SandPServiceImpl implements SandPService, CommandLineRunner {
 //				oldDatas.addAll(0, notExistsDatas);
 			repository.saveAll(notExistsDatas);
 
-			System.out.println("new datas in db: " + notExistsDatas.size());
+			System.out.println("amount new data added in db: " + notExistsDatas.size());
+			System.out.println("amount new data added in db: " + oldDatas.size());
 
 //			}
 		}
 
 	}
+
 
 }

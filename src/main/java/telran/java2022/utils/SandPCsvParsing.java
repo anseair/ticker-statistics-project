@@ -16,22 +16,21 @@ import org.apache.commons.csv.CSVRecord;
 import telran.java2022.sandp.model.SandP;
 import telran.java2022.sandp.model.SandPDate;
 
-public class CsvFileParsing {
+public class SandPCsvParsing {
 
 	
 	public static List<SandP> parsingWithApache() {
 		List<SandP> res = new ArrayList<>();
 
-		try (BufferedReader br = new BufferedReader(new FileReader("HistoricalData5years.csv"));
+		try (BufferedReader br = new BufferedReader(new FileReader("S&P5005years.csv"));
 				CSVParser csvParser = new CSVParser(br,
 						CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase())) {
 			List<CSVRecord> csvRecords = csvParser.getRecords();
 
 			
-			res = csvRecords.stream().map(CsvFileParsing::fillData).collect(Collectors.toList());
+			res = csvRecords.stream().map(SandPCsvParsing::fillData).collect(Collectors.toList());
 
 			System.out.println();
-			System.out.println(res.size());
 			System.out.println(res.get(0));
 			System.out.println(res.get(1));
 			System.out.println(res.get(2));
