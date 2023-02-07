@@ -5,6 +5,8 @@ import java.util.stream.Stream;
 
 import org.springframework.data.repository.CrudRepository;
 
+import telran.java2022.gold.model.Gold;
+import telran.java2022.gold.model.GoldDate;
 import telran.java2022.sandp.model.SandP;
 import telran.java2022.sandp.model.SandPDate;
 

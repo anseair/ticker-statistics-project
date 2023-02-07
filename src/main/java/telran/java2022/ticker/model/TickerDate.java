@@ -1,4 +1,4 @@
-package telran.java2022.sandp.model;
+package telran.java2022.ticker.model;
 
 import java.time.LocalDate;
 
@@ -15,7 +15,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"name", "date"})
 @ToString
-public class SandPDate{
+public class TickerDate {
 
 	private String name;
 	private LocalDate date;
