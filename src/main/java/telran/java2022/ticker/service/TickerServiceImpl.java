@@ -14,10 +14,11 @@ import lombok.RequiredArgsConstructor;
 import telran.java2022.sandp.exceptoins.DateExistsException;
 import telran.java2022.sandp.exceptoins.NotFoundException;
 import telran.java2022.ticker.dao.TickerRepository;
+import telran.java2022.ticker.dto.DateBetweenDto;
 import telran.java2022.ticker.dto.TickerDto;
 import telran.java2022.ticker.dto.TickerStatDto;
 import telran.java2022.ticker.model.Ticker;
-import telran.java2022.ticker.model.TickerDate;
+import telran.java2022.ticker.model.TickerId;
 import telran.java2022.utils.TickerCsvParsing;
 
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class TickerServiceImpl implements TickerService, CommandLineRunner {
 
 	@Override
 	public TickerDto add(TickerDto tickerDto) {
-		if (repository.existsById(modelMapper.map(tickerDto.getDate(), TickerDate.class))) {
+		if (repository.existsById(modelMapper.map(tickerDto.getDate(), TickerId.class))) {
 			throw new DateExistsException();
 		}
 		Ticker ticker = modelMapper.map(tickerDto, Ticker.class);
@@ -37,24 +38,42 @@ public class TickerServiceImpl implements TickerService, CommandLineRunner {
 	}
 
 	@Override
-	public TickerDto remove(TickerDate date) {
+	public TickerDto remove(TickerId date) {
 		Ticker ticker = repository.findById(date).orElseThrow(() -> new NotFoundException());
 		repository.deleteById(date);
 		return modelMapper.map(ticker, TickerDto.class);
 	}
 
 	@Override
-	public TickerDto findByDate(TickerDate date) {
+	public TickerDto findByDate(TickerId date) {
 		Ticker ticker = repository.findById(date).orElseThrow(() -> new NotFoundException());
 		return modelMapper.map(ticker, TickerDto.class);
 	}
 
 	@Override
-	public TickerDto update(TickerDate date, double priceClose) {
+	public TickerDto update(TickerId date, double priceClose) {
 		Ticker ticker = repository.findById(date).orElseThrow(() -> new NotFoundException());
 		ticker.setPriceClose(priceClose);
 		repository.save(ticker);
 		return modelMapper.map(ticker, TickerDto.class);
+	}
+	
+	@Override
+	public TickerDto findMaxPriceByDatePeriod(DateBetweenDto dateBetweenDto, String name) {
+		Ticker s = repository.findByDateDateBetween(dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+				.filter(t -> t.getDate().getName().equals(name))
+				.max((s1,s2) -> Double.compare(s1.getPriceClose(), s2.getPriceClose()))
+				.orElse(null);
+		return modelMapper.map(s, TickerDto.class);
+	}
+
+	@Override
+	public TickerDto findMinPriceByDatePeriod(DateBetweenDto dateBetweenDto, String name) {
+		Ticker s = repository.findByDateDateBetween(dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+				.filter(t -> t.getDate().getName().equals(name))
+				.min((s1,s2) -> Double.compare(s1.getPriceClose(), s2.getPriceClose()))
+				.orElse(null);
+		return modelMapper.map(s, TickerDto.class);
 	}
 
 	@Override
@@ -67,9 +86,9 @@ public class TickerServiceImpl implements TickerService, CommandLineRunner {
 		
 		tickerPeriods.forEach(e -> System.out.println(e));
 		
-		int end = tickerPeriods.indexOf(new Ticker(new TickerDate(name, dateEnd), 0.0));
+		int end = tickerPeriods.indexOf(new Ticker(new TickerId(name, dateEnd), 0.0));
 		while(end < 0) {
-			end = tickerPeriods.indexOf(new Ticker(new TickerDate(name, dateEnd.minusDays(1)), 0.0));
+			end = tickerPeriods.indexOf(new Ticker(new TickerId(name, dateEnd.minusDays(1)), 0.0));
 		}
 		for (int start = 0; start < end; start++) {
 
@@ -78,10 +97,10 @@ public class TickerServiceImpl implements TickerService, CommandLineRunner {
 			System.out.println("sandpStart: " + tickerPeriods.get(start));
 
 			LocalDate dateEndOfPeriod = tickerPeriods.get(start).getDate().getDate().plusDays(termDays);
-			while (!repository.existsById(new TickerDate(name, dateEndOfPeriod))) {
+			while (!repository.existsById(new TickerId(name, dateEndOfPeriod))) {
 				dateEndOfPeriod = dateEndOfPeriod.minusDays(1);
 			}
-			Ticker tickerEnd = repository.findById(new TickerDate(name, dateEndOfPeriod)).get();
+			Ticker tickerEnd = repository.findById(new TickerId(name, dateEndOfPeriod)).get();
 			
 			int endIndex = tickerPeriods.indexOf(tickerEnd);
 
@@ -109,8 +128,8 @@ public class TickerServiceImpl implements TickerService, CommandLineRunner {
 
 		List<Ticker> notExistsDatas = new ArrayList<>();
 
-		List<Ticker> newDatas = TickerCsvParsing.parsingWithApache("tesla_5years.csv", "tesla");
-		List<Ticker> newDatasM = TickerCsvParsing.parsingWithApache("microsoft_5years.csv", "microsoft");
+		List<Ticker> newDatas = TickerCsvParsing.parsingWithApache("tesla_5years.csv", "tesla", "yyyy-MM-dd", 4);
+		List<Ticker> newDatasM = TickerCsvParsing.parsingWithApache("microsoft_5years.csv", "microsoft", "yyyy-MM-dd", 4);
 
 		System.out.println("amount of data tesla in csv: " + newDatas.size());		
 		System.out.println("amount of data microsoft in csv: " + newDatasM.size());
@@ -125,7 +144,7 @@ public class TickerServiceImpl implements TickerService, CommandLineRunner {
 			oldDatas.addAll(newDatasM);
 			repository.saveAll(oldDatas);
 
-			System.out.println("amount data after add in db: " + oldDatas.size());
+			System.out.println("total data in db: " + oldDatas.size());
 
 		} else {
 			notExistsDatas = newDatas.stream().filter(arr -> !oldDatas.stream().anyMatch(arr::equals))
@@ -135,11 +154,14 @@ public class TickerServiceImpl implements TickerService, CommandLineRunner {
 					.collect(Collectors.toList());
 			repository.saveAll(notExistsDatas);
 
+			int res = notExistsDatas.size() + oldDatas.size();
 			System.out.println("amount new data  added in db: " + notExistsDatas.size());
-			System.out.println("after add in db : " + oldDatas.size());
+			System.out.println("total data in db : " + res);
 		}
 
 
 	}
+
+
 
 }

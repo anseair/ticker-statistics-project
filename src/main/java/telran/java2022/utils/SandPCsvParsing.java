@@ -19,16 +19,13 @@ import telran.java2022.sandp.model.SandPDate;
 public class SandPCsvParsing {
 
 	
-	public static List<SandP> parsingWithApache() {
+	public static List<SandP> parsingWithApache(String fileName, String name, String pattern, int numberOfClose) {
 		List<SandP> res = new ArrayList<>();
-
-		try (BufferedReader br = new BufferedReader(new FileReader("S&P5005years.csv"));
+		try (BufferedReader br = new BufferedReader(new FileReader(fileName));
 				CSVParser csvParser = new CSVParser(br,
 						CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase())) {
 			List<CSVRecord> csvRecords = csvParser.getRecords();
-
-			
-			res = csvRecords.stream().map(SandPCsvParsing::fillData).collect(Collectors.toList());
+			res = csvRecords.stream().map(s -> fillData(s, name, pattern, numberOfClose)).collect(Collectors.toList());
 
 			System.out.println();
 			System.out.println(res.get(0));
@@ -39,29 +36,24 @@ public class SandPCsvParsing {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		return res;
-		
 	}
 
-	private static SandP fillData(CSVRecord csvRecord) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+	private static SandP fillData(CSVRecord csvRecord, String name, String pattern, int numberOfClose) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
 		LocalDate date = LocalDate.parse(csvRecord.get(0), formatter);
-		
-	    double price = Double.parseDouble(csvRecord.get(1));
-	    SandP res = new SandP(new SandPDate("S&P", date), price);
+	    double price = Double.parseDouble(csvRecord.get(numberOfClose));
+	    SandP res = new SandP(new SandPDate(name, date), price);
 		return res;
 	}
+	
+	
 	
 	
 	public static List<SandP> parsingWithoutApache() {
-		
-		
 		List<SandP> res = new ArrayList<>();
-
 		try (BufferedReader br = new BufferedReader(new FileReader("HistoricalData1months.csv"))) {
 			br.readLine();
-
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				String[] col = line.split(",");

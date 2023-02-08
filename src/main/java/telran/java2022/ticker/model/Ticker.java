@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Document(collection = "Ticker")
+@Document(collection = "Tickers")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,7 +20,7 @@ import lombok.ToString;
 public class Ticker {
 
 	@Id
-	private TickerDate date;
+	private TickerId date;
 	private double priceClose;
 
 }

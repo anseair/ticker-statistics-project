@@ -15,7 +15,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"name", "date"})
 @ToString
-public class TickerDate {
+public class TickerId {
 
 	private String name;
 	private LocalDate date;

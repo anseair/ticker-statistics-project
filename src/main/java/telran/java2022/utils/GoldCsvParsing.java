@@ -21,16 +21,13 @@ import telran.java2022.sandp.model.SandPDate;
 public class GoldCsvParsing {
 
 	
-	public static List<Gold> parsingWithApache() {
+	public static List<Gold> parsingWithApache(String fileName, String name, String pattern, int numberOfClose) {
 		List<Gold> res = new ArrayList<>();
-
-		try (BufferedReader br = new BufferedReader(new FileReader("Gold5years.csv"));
+		try (BufferedReader br = new BufferedReader(new FileReader(fileName));
 				CSVParser csvParser = new CSVParser(br,
 						CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase())) {
 			List<CSVRecord> csvRecords = csvParser.getRecords();
-
-			
-			res = csvRecords.stream().map(GoldCsvParsing::fillData).collect(Collectors.toList());
+			res = csvRecords.stream().map(g -> fillData(g, name, pattern, numberOfClose)).collect(Collectors.toList());
 
 			System.out.println();
 			System.out.println(res.get(0));
@@ -41,17 +38,14 @@ public class GoldCsvParsing {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		return res;
-		
 	}
 
-	private static Gold fillData(CSVRecord csvRecord) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+	private static Gold fillData(CSVRecord csvRecord, String name, String pattern, int numberOfClose) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
 		LocalDate date = LocalDate.parse(csvRecord.get(0), formatter);
-		
-	    double price = Double.parseDouble(csvRecord.get(1));
-	    Gold res = new Gold(new GoldDate("Gold", date), price);
+	    double price = Double.parseDouble(csvRecord.get(numberOfClose));
+	    Gold res = new Gold(new GoldDate(name, date), price);
 		return res;
 	}
 	
@@ -61,19 +55,14 @@ public class GoldCsvParsing {
 	
 	
 	public static List<SandP> parsingWithoutApache() {
-		
-		
 		List<SandP> res = new ArrayList<>();
-
 		try (BufferedReader br = new BufferedReader(new FileReader("HistoricalData1months.csv"))) {
 			br.readLine();
-
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				String[] col = line.split(",");
 				res.add(fillSandP(col));
 				line = br.readLine();
-				
 			}
 //			
 //			System.out.println();
