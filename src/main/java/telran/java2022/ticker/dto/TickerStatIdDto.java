@@ -7,12 +7,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TickerStatDto {
-
-	private TickerStatIdDto ticker;
-	double minPercent;
-	double maxPercent;
-	double minRevenue;
-	double maxRevenue;
-
+public class TickerStatIdDto {
+	private String name;
+	private long termDays;
+	private long periodDays;
+	
 }

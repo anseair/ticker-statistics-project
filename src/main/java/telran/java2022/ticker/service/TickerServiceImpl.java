@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -12,16 +13,21 @@ import lombok.RequiredArgsConstructor;
 import telran.java2022.ticker.exceptions.AlreadyExistException;
 import telran.java2022.ticker.exceptions.NotFoundException;
 import telran.java2022.ticker.dao.TickerRepository;
+import telran.java2022.ticker.dao.TickerStatRepository;
 import telran.java2022.ticker.dto.DateBetweenDto;
 import telran.java2022.ticker.dto.TickerDto;
 import telran.java2022.ticker.dto.TickerStatDto;
+import telran.java2022.ticker.dto.TickerStatIdDto;
 import telran.java2022.ticker.model.Ticker;
 import telran.java2022.ticker.model.TickerId;
+import telran.java2022.ticker.model.TickerIdStat;
+import telran.java2022.ticker.model.TickerStat;
 
 @RequiredArgsConstructor
 @Service
 public class TickerServiceImpl implements TickerService {
 	final TickerRepository repository;
+	final TickerStatRepository statRepository;
 	final ModelMapper modelMapper;
 
 	@Override
@@ -74,14 +80,13 @@ public class TickerServiceImpl implements TickerService {
 	@Override
 	public TickerStatDto getStat(long periodDays, double sum, long termDays, String name) {
 		LocalDate dateStart = LocalDate.now().minusDays(periodDays + termDays);
-		List<Double> tickerPStats = new ArrayList<>();
+		List<Double> stats = new ArrayList<>();
 		LocalDate dateEnd = LocalDate.now().minusDays(termDays);
 		List<Ticker> tickerPeriods = repository.findByDateDateBetweenOrderByDateDate(dateStart, LocalDate.now())
-				.filter(t -> t.getDate().getName().equals(name))
-				.collect(Collectors.toList());
+				.filter(t -> t.getDate().getName().equals(name)).collect(Collectors.toList());
 
 //		tickerPeriods.forEach(e -> System.out.println(e));
-		System.out.println(tickerPeriods.size());
+//		System.out.println(tickerPeriods.size());
 
 		int end = tickerPeriods.indexOf(new Ticker(new TickerId(name, dateEnd), 0.0));
 		while (end < 0) {
@@ -111,22 +116,34 @@ public class TickerServiceImpl implements TickerService {
 //			System.out.println("TickerpEnd: " + tickerEnd);
 //			System.out.println("index dateEnd in list = " + indexEnd);
 
-			Double apy = (tickerPeriods.get(indexEnd).getPriceClose() 
-					- tickerPeriods.get(start).getPriceClose())/ tickerPeriods.get(start).getPriceClose() * 100 * (365.0/ termDays);
+			Double apy = (tickerPeriods.get(indexEnd).getPriceClose() - tickerPeriods.get(start).getPriceClose())
+					/ tickerPeriods.get(start).getPriceClose() * 100 * (365.0 / termDays);
 
-			System.out.println("==============");
-			System.out.println("apy: " + apy);
+//			System.out.println("==============");
+//			System.out.println("apy: " + apy);
 
-			tickerPStats.add(apy);
+			stats.add(apy);
 
-			System.out.println("TickerStats: " + tickerPStats);
+//			System.out.println("stats: " + stats);
 		}
-		double minPercent = tickerPStats.stream().min((s1, s2) -> Double.compare(s1, s2)).get();
-		double maxPercent = tickerPStats.stream().max((s1, s2) -> Double.compare(s1, s2)).get();
-		double minRevenue =sum * (minPercent / 100) + sum;
+		double minPercent = stats.stream().min((s1, s2) -> Double.compare(s1, s2)).get();
+		double maxPercent = stats.stream().max((s1, s2) -> Double.compare(s1, s2)).get();
+		double minRevenue = sum * (minPercent / 100) + sum;
 		double maxRevenue = sum * (maxPercent / 100) + sum;
-		return new TickerStatDto(minPercent, maxPercent, minRevenue, maxRevenue);
-	}
 
+		List<TickerStat> tickerStats = StreamSupport.stream(statRepository.findAll().spliterator(), false)
+				.collect(Collectors.toList());
+
+		if (statRepository.existsById(new TickerIdStat(name, termDays, periodDays))) {
+			throw new AlreadyExistException();
+		}
+		tickerStats.add(new TickerStat(new TickerIdStat(name, termDays, periodDays), minPercent, maxPercent, minRevenue, maxRevenue));
+		statRepository.saveAll(tickerStats);
+		
+		System.out.println("TickerStats: " + tickerStats);
+		System.out.println(tickerStats.size());
+
+		return new TickerStatDto(new TickerStatIdDto(name, termDays, periodDays), minPercent, maxPercent, minRevenue, maxRevenue);
+	}
 
 }
