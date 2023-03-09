@@ -59,9 +59,14 @@ public class TickerController {
 		return tickerService.findMinPriceByDatePeriod(dateBetweenDto, name.toLowerCase());
 	}
 	
-	@GetMapping("/{name}/{periodYears}/{sum}/{termYears}")
-	public TickerStatDto getStat(@PathVariable long periodYears, @PathVariable double sum, @PathVariable long termYears, @PathVariable String name) {
-		return tickerService.getStat(periodYears, sum, termYears, name.toLowerCase());
+	@GetMapping("/{name}/{periodDays}/{sum}/{termDays}")
+	public TickerStatDto getStat(@PathVariable long periodDays, @PathVariable double sum, @PathVariable long termDays, @PathVariable String name) {
+		return tickerService.getStat(periodDays, sum, termDays, name.toLowerCase());
 		
+	}
+	
+	@GetMapping("/{name1}/{name2}/{termDays}")
+	public double getCorrelation(@PathVariable String name1, @PathVariable String name2, @PathVariable int termDays) {
+		return tickerService.getCorrelation(name1, name2, termDays);
 	}
 }
