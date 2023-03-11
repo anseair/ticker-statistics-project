@@ -14,6 +14,7 @@ public class TickerStatDto {
 	double maxPercent;
 	double minRevenue;
 	double maxRevenue;
+	
 	double avgPercent;
 	double avgRevenue;
 

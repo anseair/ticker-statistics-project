@@ -21,4 +21,6 @@ public interface TickerService {
 	TickerStatDto getStat(long periodDays, double sum, long termDays, String name);
 	
 	double getCorrelation(String name1, String name2, int termDays);
+	
+	double getCorrelationWithApache(String name1, String name2, int termDays);
 }
