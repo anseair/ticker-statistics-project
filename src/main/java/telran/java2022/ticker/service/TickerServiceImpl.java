@@ -139,7 +139,7 @@ public class TickerServiceImpl implements TickerService {
 		double maxRevenue = sum * (maxPercent / 100) + sum;
 		double avgRevenue = sum * (avgPercent / 100) + sum;
 
-		return new TickerStatDto(new TickerStatIdDto(name, termDays, periodDays), minPercent, maxPercent, minRevenue, maxRevenue, avgPercent, avgRevenue);
+		return new TickerStatDto(new TickerStatIdDto(name, termDays, periodDays), minPercent, maxPercent, avgPercent, minRevenue, maxRevenue, avgRevenue);
 	}
 	
 	
@@ -188,7 +188,7 @@ public class TickerServiceImpl implements TickerService {
 		double maxRevenue = sum * (maxPercent / 100) + sum;
 		double avgRevenue = sum * (avgPercent / 100) + sum;
 
-		return new TickerStatDtoWithDate(new TickerStatIdDtoWithDate(name, termDays, dateBetweenDto), minPercent, maxPercent, minRevenue, maxRevenue, avgPercent, avgRevenue);
+		return new TickerStatDtoWithDate(new TickerStatIdDtoWithDate(name, termDays, dateBetweenDto), minPercent, maxPercent, avgPercent, minRevenue, maxRevenue, avgRevenue);
 	}
 	
 	@Override
