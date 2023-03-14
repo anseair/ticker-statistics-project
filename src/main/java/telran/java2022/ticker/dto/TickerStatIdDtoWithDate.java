@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TickerStatIdDto {
+public class TickerStatIdDtoWithDate {
 	private String name;
 	private long termDays;
-	private long periodDays;
-
-	
+	private DateBetweenDto dateBetween;
+		
 }

@@ -32,6 +32,8 @@ public class FirstProjectApplication implements CommandLineRunner{
 		newDatas.addAll(TickerCsvParsing.parsingWithApache("msft.csv", "microsoft", "yyyy-MM-dd",4));
 		newDatas.addAll(TickerCsvParsing.parsingWithApache("spx.csv", "sandp", "yyyy-MM-dd",4));
 		newDatas.addAll(TickerCsvParsing.parsingWithApache("gold.csv", "gold", "yyyy-MM-dd",4));
+		newDatas.addAll(TickerCsvParsing.parsingWithApache("apple.csv", "apple", "yyyy-MM-dd",4));
+
 		
 		System.out.println("amount of data in csv: " + newDatas.size());
 

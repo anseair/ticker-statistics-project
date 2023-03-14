@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TickerStatDto {
+public class TickerStatDtoWithDate {
 
-	private TickerStatIdDto ticker;
+	private TickerStatIdDtoWithDate ticker;
 	double minPercent;
 	double maxPercent;
 	double avgPercent;

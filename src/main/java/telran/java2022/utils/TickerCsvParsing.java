@@ -27,11 +27,11 @@ public class TickerCsvParsing {
 			List<CSVRecord> csvRecords = csvParser.getRecords();
 			res = csvRecords.stream().map(t -> fillData(t, name, pattern, numberOfClose)).collect(Collectors.toList());
 
-			System.out.println();
-			System.out.println(res.get(0));
-			System.out.println(res.get(1));
-			System.out.println(res.get(2));
-			System.out.println();
+//			System.out.println();
+//			System.out.println(res.get(0));
+//			System.out.println(res.get(1));
+//			System.out.println(res.get(2));
+//			System.out.println();
 
 		} catch (Exception e) {
 			e.printStackTrace();
