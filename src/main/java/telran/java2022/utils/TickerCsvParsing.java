@@ -17,7 +17,6 @@ import telran.java2022.ticker.model.TickerId;
 
 public class TickerCsvParsing {
 
-	
 	public static List<Ticker> parsingWithApache(String fileName, String name, String pattern, int numberOfClose) {
 		List<Ticker> res = new ArrayList<>();
 
@@ -26,12 +25,6 @@ public class TickerCsvParsing {
 						CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase())) {
 			List<CSVRecord> csvRecords = csvParser.getRecords();
 			res = csvRecords.stream().map(t -> fillData(t, name, pattern, numberOfClose)).collect(Collectors.toList());
-
-//			System.out.println();
-//			System.out.println(res.get(0));
-//			System.out.println(res.get(1));
-//			System.out.println(res.get(2));
-//			System.out.println();
 
 		} catch (Exception e) {
 			e.printStackTrace();

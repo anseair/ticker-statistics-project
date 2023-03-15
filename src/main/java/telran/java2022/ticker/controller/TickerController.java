@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import telran.java2022.ticker.dto.DateBetweenDto;
+import telran.java2022.ticker.dto.FullStatDto;
 import telran.java2022.ticker.dto.TickerDto;
-import telran.java2022.ticker.dto.TickerStatDto;
-import telran.java2022.ticker.dto.TickerStatDtoWithDate;
+import telran.java2022.ticker.dto.StatDto;
 import telran.java2022.ticker.model.TickerId;
 import telran.java2022.ticker.service.TickerService;
 
@@ -61,13 +61,13 @@ public class TickerController {
 	}
 	
 	@GetMapping("/{name}/{periodDays}/{sum}/{termDays}")
-	public TickerStatDto getStat(@PathVariable long periodDays, @PathVariable double sum, @PathVariable long termDays, @PathVariable String name) {
-		return tickerService.getStat(periodDays, sum, termDays, name.toLowerCase());
+	public StatDto getStat(@PathVariable long periodDays, @PathVariable double sum, @PathVariable long termDays, @PathVariable String name) {
+		return tickerService.getStatistic(periodDays, sum, termDays, name.toLowerCase());
 	}
 	
 	@PostMapping("/{name}/{sum}/{termDays}")
-	public TickerStatDtoWithDate getStat(@PathVariable double sum, @PathVariable long termDays, @PathVariable String name, @RequestBody DateBetweenDto dateBetweenDto) {
-		return tickerService.getStat(sum, termDays, name, dateBetweenDto);
+	public FullStatDto getStat(@PathVariable double sum, @PathVariable long termDays, @PathVariable String name, @RequestBody DateBetweenDto dateBetweenDto) {
+		return tickerService.getStatistic(sum, termDays, name, dateBetweenDto);
 	}
 	
 	@GetMapping("/{name1}/{name2}/{termDays}")

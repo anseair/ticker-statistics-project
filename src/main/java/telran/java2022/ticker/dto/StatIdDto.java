@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TickerStatIdDto {
+public class StatIdDto {
 	private String name;
 	private long termDays;
 	private long periodDays;
