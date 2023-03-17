@@ -11,11 +11,12 @@ import telran.java2022.ticker.model.TickerId;
 
 public interface TickerRepository extends CrudRepository<Ticker, TickerId>{
 
-	Stream<Ticker> findTickerByDateDateBetween(LocalDate dateFrom, LocalDate dateTo);
+	Stream<Ticker> findTickerByDateNameAndDateDateBetween(String name, LocalDate dateFrom, LocalDate dateTo);
 
 	Stream<Ticker> findTickerByDateDateBetweenOrderByDateDate(LocalDate dateFrom, LocalDate dateTo);
 
-	@Query("{'date.name': ?0,  'date.date': { $gt: ?1, $lt: ?2 }}")
-	Stream<Ticker> findQueryByNameAndByDateBetweenOrderByDate(String name, LocalDate dateFrom, LocalDate dateTo);
+//	@Query("{'date.name': ?0, 'date.date': { $gt: ?1, $lt: ?2 }}")
+	Stream<Ticker> findQueryByDateNameAndDateDateBetweenOrderByDateDate(String name, LocalDate dateFrom, LocalDate dateTo);
+
 
 }

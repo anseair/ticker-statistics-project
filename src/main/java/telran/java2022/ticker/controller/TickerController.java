@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import telran.java2022.ticker.dto.DateBetweenDto;
 import telran.java2022.ticker.dto.FullStatDto;
 import telran.java2022.ticker.dto.TickerDto;
-import telran.java2022.ticker.dto.StatDto;
 import telran.java2022.ticker.model.TickerId;
 import telran.java2022.ticker.service.TickerService;
 
@@ -61,11 +60,11 @@ public class TickerController {
 	}
 	
 	@GetMapping("/{name}/{periodDays}/{sum}/{termDays}")
-	public StatDto getStat(@PathVariable long periodDays, @PathVariable double sum, @PathVariable long termDays, @PathVariable String name) {
+	public FullStatDto getStat(@PathVariable long periodDays, @PathVariable double sum, @PathVariable long termDays, @PathVariable String name) {
 		return tickerService.getStatistic(periodDays, sum, termDays, name.toLowerCase());
 	}
 	
-	@PostMapping("/{name}/{sum}/{termDays}")
+	@GetMapping("/stat/{name}/{sum}/{termDays}")
 	public FullStatDto getStat(@PathVariable double sum, @PathVariable long termDays, @PathVariable String name, @RequestBody DateBetweenDto dateBetweenDto) {
 		return tickerService.getStatistic(sum, termDays, name, dateBetweenDto);
 	}
@@ -75,7 +74,7 @@ public class TickerController {
 		return tickerService.getCorrelation(name1, name2, termDays);
 	}
 	
-	@PostMapping("/{name1}/{name2}")
+	@GetMapping("/correlation/{name1}/{name2}")
 	public String getCorrelation(@PathVariable String name1, @PathVariable String name2, @RequestBody DateBetweenDto dateBetweenDto) {
 		return tickerService.getCorrelation(name1, name2, dateBetweenDto);
 	}
