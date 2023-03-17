@@ -27,25 +27,25 @@ public class FirstProjectApplication implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 //======RUN ONLY FOR DOWNLOAD NEW DATA=============================================
 		
-//		List<Ticker> newDatas = new ArrayList<>();
-//		newDatas.addAll(TickerCsvParsing.parsingWithApache("tsla.csv", "tesla", "yyyy-MM-dd", 4));
+		List<Ticker> newDatas = new ArrayList<>();
+		newDatas.addAll(TickerCsvParsing.parsingWithApache("tsla.csv", "tesla", "yyyy-MM-dd", 4));
 //		newDatas.addAll(TickerCsvParsing.parsingWithApache("msft.csv", "microsoft", "yyyy-MM-dd",4));
 //		newDatas.addAll(TickerCsvParsing.parsingWithApache("spx.csv", "sandp", "yyyy-MM-dd",4));
 //		newDatas.addAll(TickerCsvParsing.parsingWithApache("gold.csv", "gold", "yyyy-MM-dd",4));
-//		newDatas.addAll(TickerCsvParsing.parsingWithApache("apple.csv", "apple", "yyyy-MM-dd",4));
-//		
-//		List<Ticker> oldDatas = StreamSupport.stream(repository.findAll().spliterator(), false)
-//				.collect(Collectors.toList());
-//		
-//		if (oldDatas.isEmpty()) {
-//			oldDatas.addAll(newDatas);
-//			repository.saveAll(oldDatas);
-//		} else {
-//			List<Ticker> notExistsDatas = new ArrayList<>();
-//			notExistsDatas = newDatas.stream().filter(arr -> !oldDatas.stream().anyMatch(arr::equals))
-//					.collect(Collectors.toList());
-//			repository.saveAll(notExistsDatas);
-//		}
+		newDatas.addAll(TickerCsvParsing.parsingWithApache("apple.csv", "apple", "yyyy-MM-dd",4));
+		
+		List<Ticker> oldDatas = StreamSupport.stream(repository.findAll().spliterator(), false)
+				.collect(Collectors.toList());
+		
+		if (oldDatas.isEmpty()) {
+			oldDatas.addAll(newDatas);
+			repository.saveAll(oldDatas);
+		} else {
+			List<Ticker> notExistsDatas = new ArrayList<>();
+			notExistsDatas = newDatas.stream().filter(arr -> !oldDatas.stream().anyMatch(arr::equals))
+					.collect(Collectors.toList());
+			repository.saveAll(notExistsDatas);
+		}
 	}
 
 }

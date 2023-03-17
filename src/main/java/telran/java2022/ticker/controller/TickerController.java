@@ -78,4 +78,10 @@ public class TickerController {
 	public String getCorrelation(@PathVariable String name1, @PathVariable String name2, @RequestBody DateBetweenDto dateBetweenDto) {
 		return tickerService.getCorrelation(name1, name2, dateBetweenDto);
 	}
+	
+	@DeleteMapping("/{name}")
+	public boolean removeByName(@PathVariable String name) {
+		return tickerService.removeByName(name);
+	}
+	
 }

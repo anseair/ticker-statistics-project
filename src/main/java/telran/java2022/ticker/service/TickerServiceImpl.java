@@ -43,6 +43,16 @@ public class TickerServiceImpl implements TickerService {
 		repository.deleteById(date);
 		return modelMapper.map(ticker, TickerDto.class);
 	}
+	
+	@Override
+	public boolean removeByName(String name) {
+		List<Ticker> ticker = repository.findTickerByDateName(name).collect(Collectors.toList());
+		if (ticker.size() == 0) {
+			return false;
+		}
+		repository.deleteAll(ticker);
+		return true;
+	}
 
 	@Override
 	public TickerDto findByDate(TickerId date) {
@@ -116,10 +126,12 @@ public class TickerServiceImpl implements TickerService {
 //			System.out.println("index dateEnd in list = " + indexEnd);
 //			System.out.println("TickerEnd: " + tickerEnd);
 
-			Double apy = (allPeriod.get(indexEnd).getPriceClose() - allPeriod.get(start).getPriceClose())
-					/ allPeriod.get(start).getPriceClose() * (365.0 / depositPeriodDays) * 100;
+			Double apr = (allPeriod.get(indexEnd).getPriceClose() - allPeriod.get(start).getPriceClose())
+					/ allPeriod.get(start).getPriceClose(); 
+			Double apy  = 100 * (Math.pow(1+ apr, 365.0/depositPeriodDays) - 1); 
 
-//			System.out.println("==============");
+//			System.out.println("end: " + allPeriod.get(indexEnd).getDate().getDate() + " - " + allPeriod.get(indexEnd).getPriceClose());
+//			System.out.println("start: " + allPeriod.get(start).getDate().getDate() + " - " +  allPeriod.get(start).getPriceClose());
 //			System.out.println("apy: " + apy);
 			
 			allStats.add(apy);
@@ -180,8 +192,15 @@ public class TickerServiceImpl implements TickerService {
 				tickerEnd.setDate(tickerIdEnd);
 				indexEnd = allPeriod.indexOf(tickerEnd);
 			}
-			Double apy = (allPeriod.get(indexEnd).getPriceClose() - allPeriod.get(start).getPriceClose())
-					/ allPeriod.get(start).getPriceClose() * (365.0 / depositPeriodDays) * 100;
+			
+			Double apr = (allPeriod.get(indexEnd).getPriceClose() - allPeriod.get(start).getPriceClose())
+					/ allPeriod.get(start).getPriceClose(); 
+			Double apy  = 100 * (Math.pow(1+ apr, 365.0/depositPeriodDays) - 1); 
+			
+//			System.out.println("end: " + allPeriod.get(indexEnd).getDate().getDate() + " - " + allPeriod.get(indexEnd).getPriceClose());
+//			System.out.println("start: " + allPeriod.get(start).getDate().getDate() + " - " +  allPeriod.get(start).getPriceClose());
+//			System.out.println("apy: " + apy);
+			
 			allStats.add(apy);
 			datesOfEnds.add(allPeriod.get(indexEnd));
 		}

@@ -26,6 +26,6 @@ public interface TickerService {
 
 	FullStatDto getStatistic(double sum, long termDays, String name, DateBetweenDto dateBetweenDto);
 	
-	
+	boolean removeByName(String name);
 
 }
