@@ -196,9 +196,11 @@ public class TickerServiceImpl implements TickerService {
 			Double apr = (allPeriod.get(indexEnd).getPriceClose() - allPeriod.get(start).getPriceClose())
 					/ allPeriod.get(start).getPriceClose(); 
 			Double apy  = 100 * (Math.pow(1+ apr, 365.0/depositPeriodDays) - 1); 
-			
+//			
+//			1285.79981
 //			System.out.println("end: " + allPeriod.get(indexEnd).getDate().getDate() + " - " + allPeriod.get(indexEnd).getPriceClose());
 //			System.out.println("start: " + allPeriod.get(start).getDate().getDate() + " - " +  allPeriod.get(start).getPriceClose());
+//			System.out.println("apr: "+ apr);
 //			System.out.println("apy: " + apy);
 			
 			allStats.add(apy);
@@ -206,13 +208,15 @@ public class TickerServiceImpl implements TickerService {
 		}
 		
 		double minPercent = allStats.stream().min((s1, s2) -> Double.compare(s1, s2)).get();
-		double maxPercent = allStats.stream().max(Double::compare).get();		
+		double maxPercent = allStats.stream().max(Double::compare).get();
+		
 		double minRevenue = sum * (minPercent / 100) + sum;
-		double maxRevenue = sum * (maxPercent / 100) + sum;		
+		double maxRevenue = sum * (maxPercent / 100) + sum;
+		
 		int indexMin = allStats.indexOf(minPercent);
 		int indexMax = allStats.indexOf(maxPercent);		
 		double avgPercent = allStats.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
-		double avgRevenue = sum * (avgPercent / 100) + sum;		
+		double avgRevenue = sum * avgPercent;		
 		return new FullStatDto(name, depositPeriodDays,
 				new MinStatDto(
 						allPeriod.get(indexMin).getDate().getDate(),

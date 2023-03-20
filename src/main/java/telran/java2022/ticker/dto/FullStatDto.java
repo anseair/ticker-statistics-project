@@ -14,8 +14,8 @@ public class FullStatDto {
 	String tickerName;
 	long depositPeriodDays;
 	
-	private MinStatDto minStat;
-	private MaxStatDto maxStat;
+	MinStatDto minStat;
+	MaxStatDto maxStat;
 	
 	double avgPercent;
 	double avgRevenue;
