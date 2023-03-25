@@ -37,50 +37,7 @@ public class FirstProjectApplication implements CommandLineRunner{
 	}
 
 	@Override
-	public void run(String... args) throws Exception {
-		
-//		Stock intel = YahooFinance.get("INTC");		 
-//		System.out.println("name: "+ intel.getName());
-//		System.out.println("price : " + intel.getQuote().getPrice());
-		
-		Calendar from = Calendar.getInstance();
-		Calendar to = Calendar.getInstance();
-		from.add(Calendar.DATE, -30); 
-		 
-		Stock tesla = YahooFinance.get("TSLA");
-		String name = tesla.getSymbol();
-		List<HistoricalQuote> googleHistQuotes = tesla.getHistory(from, to, Interval.DAILY);
-		System.out.println(googleHistQuotes);
-		System.out.println(googleHistQuotes.size());
-		
-		googleHistQuotes.stream()
-				.forEach(t-> System.out.println("date: " + t.getDate().toInstant().atZone(TimeZone.getDefault().toZoneId()).toLocalDate() 
-				 + "; price: " + t.getClose()));
-		List<Ticker> tickers = new ArrayList<>();	
-		
-//		List<Ticker> oldDatas = StreamSupport.stream(repository.findAll().spliterator(), false)
-//				.collect(Collectors.toList());
-//		if (oldDatas.isEmpty()) {
-//			oldDatas.addAll(res);
-//			repository.saveAll(oldDatas);
-//		} else {
-//			List<Ticker> notExistsDatas = res.stream().filter(arr -> !oldDatas.stream().anyMatch(arr::equals))
-//					.collect(Collectors.toList());
-//			repository.saveAll(notExistsDatas);
-//		}
-		
-		for (int i = 0; i < googleHistQuotes.size(); i++) {
-			LocalDate date = googleHistQuotes.get(i).getDate().toInstant().atZone(TimeZone.getDefault().toZoneId()).toLocalDate();
-			double price = googleHistQuotes.get(i).getClose().doubleValue();
-			Ticker ticker = new Ticker(new TickerId(name, date), price);
-			tickers.add(ticker);
-		}
-		System.out.println(tickers);
-		System.out.println(tickers.size());
-		repository.saveAll(tickers);
-	
-
-		
+	public void run(String... args) throws Exception {		
 		
 //======RUN ONLY FOR DOWNLOAD NEW DATA=============================================
 		

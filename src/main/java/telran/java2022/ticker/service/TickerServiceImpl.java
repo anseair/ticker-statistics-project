@@ -1,8 +1,11 @@
 package telran.java2022.ticker.service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
@@ -20,6 +23,10 @@ import telran.java2022.ticker.dto.MinStatDto;
 import telran.java2022.ticker.dto.TickerDto;
 import telran.java2022.ticker.model.Ticker;
 import telran.java2022.ticker.model.TickerId;
+import yahoofinance.Stock;
+import yahoofinance.YahooFinance;
+import yahoofinance.histquotes.HistoricalQuote;
+import yahoofinance.histquotes.Interval;
 
 @RequiredArgsConstructor
 @Service
@@ -88,10 +95,10 @@ public class TickerServiceImpl implements TickerService {
 	 * Statistic with days
 	 */
 	@Override
-	public FullStatDto getStatistic(long periodDays, double sum, long depositPeriodDays, String name) {
+	public FullStatDto getStatistic(long periodDays, double sum, long depositPeriodDays, String[] names) {
 		LocalDate dateStart = LocalDate.now().minusDays(periodDays + depositPeriodDays);
 		List<Double> allStats = new ArrayList<>();
-		List<Ticker> allPeriod = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name,dateStart, LocalDate.now())
+		List<Ticker> allPeriod = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(names[0],dateStart, LocalDate.now())
 				.collect(Collectors.toList());;
 		
 //		allPeriod.forEach(t ->System.out.println(t));
@@ -99,13 +106,13 @@ public class TickerServiceImpl implements TickerService {
 				
 		List<Ticker> datesOfEnds = new ArrayList<>();
 		LocalDate lastStart = LocalDate.now().minusDays(depositPeriodDays);
-		int end = allPeriod.indexOf(new Ticker(new TickerId(name, lastStart), 0.0));
+		int end = allPeriod.indexOf(new Ticker(new TickerId(names[0], lastStart), 0.0));
 
 		while (end < 0) {
-			end = allPeriod.indexOf(new Ticker(new TickerId(name, lastStart.minusDays(1)), 0.0));
+			end = allPeriod.indexOf(new Ticker(new TickerId(names[0], lastStart.minusDays(1)), 0.0));
 		}
 		LocalDate dateEndOfPeriod = null;
-		TickerId tickerIdEnd = new TickerId(name, LocalDate.now());
+		TickerId tickerIdEnd = new TickerId(names[0], LocalDate.now());
 		Ticker tickerEnd = new Ticker(tickerIdEnd, 0.0);
 		for (int start = 0; start < end; start++) {	
 //			System.out.println("======================");
@@ -148,7 +155,7 @@ public class TickerServiceImpl implements TickerService {
 		double avgRevenue = sum * (avgPercent / 100) + sum;		
 		int indexMin = allStats.indexOf(minPercent);
 		int indexMax = allStats.indexOf(maxPercent);
-		return new FullStatDto(name, depositPeriodDays, 
+		return new FullStatDto(names, depositPeriodDays, 
 				new MinStatDto(
 						allPeriod.get(indexMin).getDate().getDate(),
 						datesOfEnds.get(indexMin).getDate().getDate(),
@@ -168,18 +175,18 @@ public class TickerServiceImpl implements TickerService {
 	 * Statistic with LocalDate
 	 */
 	@Override
-	public FullStatDto getStatistic(double sum, long depositPeriodDays, String name, DateBetweenDto dateBetweenDto) {
+	public FullStatDto getStatistic(double sum, long depositPeriodDays, String[] names, DateBetweenDto dateBetweenDto) {
 		List<Double> allStats = new ArrayList<>();
-		List<Ticker> allPeriod = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+		List<Ticker> allPeriod = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(names[0], dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
 				.collect(Collectors.toList());		
 		List<Ticker> datesOfEnds = new ArrayList<>();
 		LocalDate dateEnd = dateBetweenDto.getDateTo().minusDays(depositPeriodDays);
-		int end = allPeriod.indexOf(new Ticker(new TickerId(name, dateEnd), 0.0));
+		int end = allPeriod.indexOf(new Ticker(new TickerId(names[0], dateEnd), 0.0));
 		while (end < 0) {
-			end = allPeriod.indexOf(new Ticker(new TickerId(name, dateEnd.minusDays(1)), 0.0));
+			end = allPeriod.indexOf(new Ticker(new TickerId(names[0], dateEnd.minusDays(1)), 0.0));
 		}
 		LocalDate dateEndOfPeriod = null;
-		TickerId tickerIdEnd = new TickerId(name, LocalDate.now());
+		TickerId tickerIdEnd = new TickerId(names[0], LocalDate.now());
 		Ticker tickerEnd = new Ticker(tickerIdEnd, 0.0);
 		for (int start = 0; start < end; start++) {			
 			dateEndOfPeriod = allPeriod.get(start).getDate().getDate().plusDays(depositPeriodDays);
@@ -217,7 +224,7 @@ public class TickerServiceImpl implements TickerService {
 		int indexMax = allStats.indexOf(maxPercent);		
 		double avgPercent = allStats.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
 		double avgRevenue = sum * avgPercent;		
-		return new FullStatDto(name, depositPeriodDays,
+		return new FullStatDto(names, depositPeriodDays,
 				new MinStatDto(
 						allPeriod.get(indexMin).getDate().getDate(),
 						datesOfEnds.get(indexMin).getDate().getDate(),
@@ -299,24 +306,6 @@ public class TickerServiceImpl implements TickerService {
 		return res; 
 	}
 	
-	
-	/**
-	 * Experimental correlation method with query request in repository
-	 */
-//	@Override
-//	public double correlation(String name1, String name2, DateBetweenDto dateBetweenDto) {
-//		double[] tickersFirst = repository.findQueryByNameAndByDateBetweenOrderByDate(name1 , dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
-//				.map(t->t.getPriceClose())
-//				.mapToDouble(Double::doubleValue)
-//				.toArray();
-//		double[] tickersSecond = repository.findQueryByNameAndByDateBetweenOrderByDate(name2 , dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
-//				.map(t->t.getPriceClose())
-//				.mapToDouble(Double::doubleValue)
-//				.toArray();
-//		double correlation = new PearsonsCorrelation().correlation(tickersFirst, tickersSecond);
-//		return correlation;
-//	}
-	
 	/**
 	 * Correlation with days without Apache
 	 */
@@ -362,4 +351,148 @@ public class TickerServiceImpl implements TickerService {
 //		return correlation;
 //	}
 
+	
+	/**
+	 * Метод автоматического обновления, нужно будет определиться за какое время
+	 * будем брать новые данные и сравнивать за это же время с тем что уже есть
+	 * Для использования метода, нужно будет перезаписать базу на данные с Yahoo
+	 * и желательно потом везде использовать названия тикеров из Yahoo
+	 * можем еще передавать количество дней за сколько хотим оновиться
+	 */
+	
+	@Override
+	public int updateDataByTickerName(String tickerName) {
+		List<HistoricalQuote> googleHistQuotes = requestData(tickerName);
+		List<Ticker> requesTickers = new ArrayList<>();
+		googleHistQuotes.stream()
+			.forEach(e -> {
+				LocalDate date = e.getDate().toInstant().atZone(TimeZone.getDefault().toZoneId()).toLocalDate();
+				double price = e.getClose().doubleValue();
+				Ticker ticker = new Ticker(new TickerId(tickerName, date), price);
+				requesTickers.add(ticker);
+			});
+		List<Ticker> baseTickers = repository
+				.findQueryByDateNameAndDateDateBetweenOrderByDateDate(tickerName, LocalDate.now().minusDays(3), LocalDate.now())
+				.collect(Collectors.toList());
+		List<Ticker> newData = requesTickers.stream()
+				.filter(ticker -> !baseTickers.stream().anyMatch(ticker::equals))
+				.collect(Collectors.toList());
+		//newData.forEach(t->System.out.println(t));
+		repository.saveAll(newData);
+		return newData.size();
+	}
+
+	private List<HistoricalQuote> requestData(String tickerName) {
+		Calendar from = Calendar.getInstance();
+		Calendar to = Calendar.getInstance();
+		from.add(Calendar.DATE, -3); 
+		Stock tickerRequest = null;
+		String symbolName = defineSymbolName(tickerName);
+		try {
+			tickerRequest = YahooFinance.get(symbolName);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		List<HistoricalQuote> googleHistQuotes = new ArrayList<>();
+		try {
+			googleHistQuotes = tickerRequest.getHistory(from, to, Interval.DAILY);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return googleHistQuotes;
+	}
+
+	private String defineSymbolName(String tickerName) {
+		String symbolName;
+		switch (tickerName) {
+		case "sap":
+			symbolName = "^GSPC";
+			break;
+		case "gold":
+			symbolName = "GC=F";
+			break;
+		case "microsoft":
+			symbolName = "MSFT";
+			break;
+		case "tesla":
+			symbolName = "TSLA";
+			break;
+		case "apple":
+			symbolName = "AAPL";
+			break;
+		default:
+			throw new NotFoundException();
+		}
+		return symbolName;
+	}
+	
+	@Override
+	public FullStatDto investmentPortfolio(String[] names, DateBetweenDto dateBetweenDto, double sum, long depositPeriodDays) {
+		List<Double> allStats = new ArrayList<>();
+		List<Ticker> datesOfEnds = new ArrayList<>();
+		List<Ticker> allPeriod = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(
+				names[0], dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+				.collect(Collectors.toList());
+		LocalDate lastStart = dateBetweenDto.getDateTo().minusDays(depositPeriodDays);
+		int end = allPeriod.indexOf(new Ticker(new TickerId(names[0], lastStart), 0.0));
+		while (end < 0) {
+			end = allPeriod.indexOf(new Ticker(new TickerId(names[0], lastStart.minusDays(1)), 0.0));
+		}
+		LocalDate dateEndOfPeriod = null;
+		TickerId tickerIdEnd = new TickerId(names[0], LocalDate.now());
+		Ticker tickerEnd = new Ticker(tickerIdEnd, 0.0);
+		allPeriod = makePortfolioPriceClose(allPeriod, names, dateBetweenDto);
+		for (int start = 0; start < end; start++) {
+			dateEndOfPeriod = allPeriod.get(start).getDate().getDate().plusDays(depositPeriodDays);
+			tickerIdEnd.setDate(dateEndOfPeriod);
+			tickerEnd.setDate(tickerIdEnd);
+			int indexEnd = allPeriod.indexOf(tickerEnd);
+			while (indexEnd < 0) {
+				dateEndOfPeriod = dateEndOfPeriod.minusDays(1);
+				tickerIdEnd.setDate(dateEndOfPeriod);
+				tickerEnd.setDate(tickerIdEnd);
+				indexEnd = allPeriod.indexOf(tickerEnd);
+			}
+			Double apr = (allPeriod.get(indexEnd).getPriceClose() - allPeriod.get(start).getPriceClose())
+					/ allPeriod.get(start).getPriceClose(); 
+			Double apy  = 100 * (Math.pow(1+ apr, 365.0/depositPeriodDays) - 1); 
+			allStats.add(apy);
+			datesOfEnds.add(allPeriod.get(indexEnd));
+		}
+		double minPercent = allStats.stream().min((p1, p2) -> Double.compare(p1, p2)).orElse(null);
+		double maxPercent = allStats.stream().max((p1, p2) -> Double.compare(p1, p2)).orElse(null);
+		double minRevenue = sum * (minPercent / 100) + sum;
+		double maxRevenue = sum * (maxPercent / 100) + sum;
+		double avgPercent = allStats.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
+		double avgRevenue = sum * (avgPercent / 100) + sum;
+		int indexMin = allStats.indexOf(minPercent);
+		int indexMax = allStats.indexOf(maxPercent);
+		return new FullStatDto(names, depositPeriodDays, 
+				new MinStatDto(
+						allPeriod.get(indexMin).getDate().getDate(),
+						datesOfEnds.get(indexMin).getDate().getDate(),
+						allPeriod.get(indexMin).getPriceClose(),
+						datesOfEnds.get(indexMin).getPriceClose(),
+						minPercent, minRevenue),
+				new MaxStatDto(
+						allPeriod.get(indexMax).getDate().getDate(),
+						datesOfEnds.get(indexMax).getDate().getDate(),
+						allPeriod.get(indexMax).getPriceClose(),
+						datesOfEnds.get(indexMax).getPriceClose(),
+						maxPercent, maxRevenue),
+				avgPercent, avgRevenue);
+	}
+	
+	private List<Ticker> makePortfolioPriceClose(List<Ticker> allPeriod, String[] names, DateBetweenDto dateBetweenDto) {
+		List<Ticker> res = allPeriod;
+		for (int i = 1; i < names.length; i++) {
+			List<Ticker> query = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(names[i], dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+					.collect(Collectors.toList());
+			for (int j = 0; j < res.size(); j++) {
+				double price = res.get(j).getPriceClose() + query.get(j).getPriceClose();
+				res.get(j).setPriceClose(price);
+			}
+		}
+		return res;
+	}
 }

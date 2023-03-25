@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class FullStatDto {
 
-	String tickerName;
+	String[] tickerNames;
 	long depositPeriodDays;
 	
 	MinStatDto minStat;
