@@ -4,14 +4,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND)
-public class NotFoundException extends RuntimeException {
+public class TickerNotFoundException extends RuntimeException {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7650793839238328822L;
 
-	public NotFoundException() {
+	public TickerNotFoundException() {
 		super("Ticker not found");
 	}
 }

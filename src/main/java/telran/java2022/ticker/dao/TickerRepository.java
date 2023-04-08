@@ -18,5 +18,7 @@ public interface TickerRepository extends CrudRepository<Ticker, TickerId>{
 	Stream<Ticker> findTickerByDateDateBetweenOrderByDateDate(LocalDate dateFrom, LocalDate dateTo);
 
 	Stream<Ticker> findQueryByDateNameAndDateDateBetweenOrderByDateDate(String name, LocalDate dateFrom, LocalDate dateTo);
+	
+	Stream<Ticker> findAllByOrderByDateName();
 
 }
