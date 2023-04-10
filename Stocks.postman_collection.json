@@ -405,7 +405,7 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "4321",
+									"value": "1234",
 									"type": "string"
 								},
 								{
@@ -501,7 +501,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"date\":{\r\n        \"name\": \"TSLA\",\r\n        \"date\": \"2023-01-30\"\r\n    },\r\n    \"priceClose\": 166.66\r\n}",
+							"raw": "{\r\n    \"date\":{\r\n        \"name\": \"GC=F\",\r\n        \"date\": \"2023-01-31\"\r\n    },\r\n    \"priceClose\": 1923.900024\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -527,7 +527,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"date\":{\r\n        \"name\": \"TSLA\",\r\n        \"date\": \"2023-01-30\"\r\n\r\n    },\r\n    \"priceClose\": 166.66\r\n}",
+									"raw": "{\r\n    \"date\":{\r\n        \"name\": \"GC=F\",\r\n        \"date\": \"2023-01-30\"\r\n    },\r\n    \"priceClose\": 1922.900024\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -556,25 +556,52 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\r\n    \"date\": {\r\n        \"name\": \"TSLA\",\r\n        \"date\": \"2023-01-30\"\r\n    },\r\n    \"priceClose\": 166.66\r\n}"
+							"body": "{\r\n    \"date\": {\r\n        \"name\": \"GC=F\",\r\n        \"date\": \"2023-01-30\"\r\n    },\r\n    \"priceClose\": 1922.900024\r\n}"
 						}
 					]
 				},
 				{
 					"name": "Find Ticker by date",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{baseUrl}}/financials/ticker/GC=F/2000-09-20",
+							"raw": "{{baseUrl}}/financials/ticker/AAPL/2022-12-15",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"financials",
 								"ticker",
-								"GC=F",
-								"2000-09-20"
+								"AAPL",
+								"2022-12-15"
 							]
 						}
 					},
@@ -585,13 +612,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/financials/GC=F/2000-09-20",
+									"raw": "{{baseUrl}}}/financials/ticker/%5EGSPC/2000-09-20",
 									"host": [
-										"{{baseUrl}}"
+										"{{baseUrl}}}"
 									],
 									"path": [
 										"financials",
-										"GC=F",
+										"ticker",
+										"%5EGSPC",
 										"2000-09-20"
 									]
 								}
@@ -607,7 +635,38 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\r\n    \"date\": {\r\n        \"name\": \"GC=F\",\r\n        \"date\": \"2000-09-20\"\r\n    },\r\n    \"priceClose\": 269.0\r\n}"
+							"body": "{\r\n    \"date\": {\r\n        \"name\": \"^GSPC\",\r\n        \"date\": \"2000-09-20\"\r\n    },\r\n    \"priceClose\": 1451.339966\r\n}"
+						},
+						{
+							"name": "Find Ticker by date",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/financials/ticker/AAPL/2022-12-15",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"financials",
+										"ticker",
+										"AAPL",
+										"2022-12-15"
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\r\n    \"date\": {\r\n        \"name\": \"AAPL\",\r\n        \"date\": \"2022-12-15\"\r\n    },\r\n    \"priceClose\": 136.5\r\n}"
 						}
 					]
 				},
@@ -632,13 +691,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/financials/TSLA/2023-01-30",
+							"raw": "{{baseUrl}}/financials/GC=F/2023-01-30",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"financials",
-								"TSLA",
+								"GC=F",
 								"2023-01-30"
 							]
 						}
@@ -650,14 +709,14 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/financials/TSLA/01-30-2023",
+									"raw": "{{baseUrl}}/financials/GC=F/2023-01-30",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"financials",
-										"TSLA",
-										"01-30-2023"
+										"GC=F",
+										"2023-01-30"
 									]
 								}
 							},
@@ -672,7 +731,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\r\n    \"date\": {\r\n        \"name\": \"TSLA\",\r\n        \"date\": \"2023-01-30\"\r\n    },\r\n    \"priceClose\": 166.66\r\n}"
+							"body": "{\r\n    \"date\": {\r\n        \"name\": \"GC=F\",\r\n        \"date\": \"2023-01-30\"\r\n    },\r\n    \"priceClose\": 1922.900024\r\n}"
 						}
 					]
 				},
@@ -697,13 +756,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/financials/microsoft",
+							"raw": "{{baseUrl}}/financials/GC=F",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"financials",
-								"microsoft"
+								"GC=F"
 							]
 						}
 					},
@@ -714,18 +773,26 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/financials/apple",
+									"raw": "{{baseUrl}}/financials/GC=F",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"financials",
-										"apple"
+										"GC=F"
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
 							"cookie": [],
 							"body": "true"
 						}
@@ -753,7 +820,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "269.0",
+							"raw": "1923",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -761,14 +828,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/financials/GC=F/2000-09-20",
+							"raw": "{{baseUrl}}/financials/GC=F/2023-01-31",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"financials",
 								"GC=F",
-								"2000-09-20"
+								"2023-01-31"
 							]
 						}
 					},
@@ -780,7 +847,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "3333.90",
+									"raw": "1923",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -788,14 +855,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/financials/GC=F/2000-09-20",
+									"raw": "{{baseUrl}}/financials/GC=F/2023-01-31",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"financials",
 										"GC=F",
-										"2000-09-20"
+										"2023-01-31"
 									]
 								}
 							},
@@ -810,7 +877,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\r\n    \"date\": {\r\n        \"name\": \"GC=F\",\r\n        \"date\": \"2000-09-20\"\r\n    },\r\n    \"priceClose\": 269.0\r\n}"
+							"body": "{\r\n    \"date\": {\r\n        \"name\": \"GC=F\",\r\n        \"date\": \"2023-01-31\"\r\n    },\r\n    \"priceClose\": 1923.0\r\n}"
 						}
 					]
 				},
@@ -835,27 +902,58 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/financials/statistic/AAPL/3652/1000/1460",
+							"raw": "{{baseUrl}}/financials/statistic/%5EGSPC/3652/1000/1460",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"financials",
 								"statistic",
-								"AAPL",
+								"%5EGSPC",
 								"3652",
 								"1000",
 								"1460"
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Get statistic",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/financials/statistic/%5EGSPC/3652/1000/1460",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"financials",
+										"statistic",
+										"%5EGSPC",
+										"3652",
+										"1000",
+										"1460"
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\r\n    \"tickerNames\": [\r\n        \"^GSPC\"\r\n    ],\r\n    \"depositPeriodDays\": 1460,\r\n    \"depositSum\": 1000.0,\r\n    \"minStat\": {\r\n        \"minDateStart\": \"2016-03-24\",\r\n        \"minDateEnd\": \"2020-03-23\",\r\n        \"minPriceStart\": 2035.939941,\r\n        \"minPriceEnd\": 2237.399902,\r\n        \"minPercentApy\": 2.3869634522205807,\r\n        \"minRevenue\": 1023.8696345222058\r\n    },\r\n    \"maxStat\": {\r\n        \"maxDateStart\": \"2017-09-05\",\r\n        \"maxDateEnd\": \"2021-09-03\",\r\n        \"maxPriceStart\": 2457.850098,\r\n        \"maxPriceEnd\": 4535.430176,\r\n        \"maxPercentApy\": 16.550938058035204,\r\n        \"maxRevenue\": 1165.509380580352\r\n    },\r\n    \"avgPercent\": 10.825986750663464,\r\n    \"avgRevenue\": 1108.2598675066347\r\n}"
+						}
+					]
 				},
 				{
 					"name": "Get statistic with dates",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"auth": {
 							"type": "basic",
@@ -872,11 +970,11 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"names\":  [\"AAPL\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2010-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    },\r\n    \"depositPeriodDays\": \"1460\",\r\n    \"sum\": \"1000\"\r\n}",
+							"raw": "{\r\n    \"names\": [\"AAPL\"],\r\n    \"dateBetween\": {\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    },\r\n    \"depositPeriodDays\": \"1460\",\r\n    \"depositSum\": \"10\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -898,11 +996,11 @@
 						{
 							"name": "Get statistics ticker with dates",
 							"originalRequest": {
-								"method": "GET",
+								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"names\":  [\"^GSPC\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2010-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    },\r\n    \"depositPeriodDays\": \"1460\",\r\n    \"sum\": \"1000\"\r\n}",
+									"raw": "{\r\n    \"names\": [\"AAPL\"],\r\n    \"dateBetween\": {\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    },\r\n    \"depositPeriodDays\": \"1460\",\r\n    \"depositSum\": \"10\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -931,7 +1029,45 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\r\n    \"tickerNames\": [\r\n        \"^GSPC\"\r\n    ],\r\n    \"depositPeriodDays\": 1460,\r\n    \"minStat\": {\r\n        \"minDateStart\": \"2016-03-24\",\r\n        \"minDateEnd\": \"2020-03-23\",\r\n        \"minPriceStart\": 2035.939941,\r\n        \"minPriceEnd\": 2237.399902,\r\n        \"minPercentApy\": 2.3869634522205807,\r\n        \"minRevenue\": 1023.8696345222058\r\n    },\r\n    \"maxStat\": {\r\n        \"maxDateStart\": \"2010-07-06\",\r\n        \"maxDateEnd\": \"2014-07-03\",\r\n        \"maxPriceStart\": 1028.060059,\r\n        \"maxPriceEnd\": 1985.439941,\r\n        \"maxPercentApy\": 17.8852766132642,\r\n        \"maxRevenue\": 1178.852766132642\r\n    },\r\n    \"avgPercent\": 11.478967043584033,\r\n    \"avgRevenue\": 1114.7896704358404\r\n}"
+							"body": "{\r\n    \"tickerNames\": [\r\n        \"AAPL\"\r\n    ],\r\n    \"depositPeriodDays\": 1460,\r\n    \"minStat\": {\r\n        \"minDateStart\": \"2014-12-26\",\r\n        \"minDateEnd\": \"2018-12-24\",\r\n        \"minPriceStart\": 28.497499,\r\n        \"minPriceEnd\": 36.7075,\r\n        \"minPercentApy\": 6.533701083659826,\r\n        \"minRevenue\": 10.653370108365984\r\n    },\r\n    \"maxStat\": {\r\n        \"maxDateStart\": \"2016-09-02\",\r\n        \"maxDateEnd\": \"2020-09-01\",\r\n        \"maxPriceStart\": 26.932501,\r\n        \"maxPriceEnd\": 134.179993,\r\n        \"maxPercentApy\": 49.400747383117235,\r\n        \"maxRevenue\": 14.940074738311722\r\n    },\r\n    \"avgPercent\": 27.919839613816723,\r\n    \"avgRevenue\": 12.791983961381671\r\n}"
+						},
+						{
+							"name": "Get statistics ticker with dates",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"names\": [\"^GSPC\"],\r\n    \"dateBetween\": {\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    },\r\n    \"depositPeriodDays\": \"1460\",\r\n    \"depositSum\": \"1000\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/financials/statistic",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"financials",
+										"statistic"
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\r\n    \"tickerNames\": [\r\n        \"^GSPC\"\r\n    ],\r\n    \"depositPeriodDays\": 1460,\r\n    \"minStat\": {\r\n        \"minDateStart\": \"2016-03-24\",\r\n        \"minDateEnd\": \"2020-03-23\",\r\n        \"minPriceStart\": 2035.939941,\r\n        \"minPriceEnd\": 2237.399902,\r\n        \"minPercentApy\": 2.3869634522205807,\r\n        \"minRevenue\": 1023.8696345222058\r\n    },\r\n    \"maxStat\": {\r\n        \"maxDateStart\": \"2017-09-05\",\r\n        \"maxDateEnd\": \"2021-09-03\",\r\n        \"maxPriceStart\": 2457.850098,\r\n        \"maxPriceEnd\": 4535.430176,\r\n        \"maxPercentApy\": 16.550938058035204,\r\n        \"maxRevenue\": 1165.509380580352\r\n    },\r\n    \"avgPercent\": 10.882003191741667,\r\n    \"avgRevenue\": 1108.8200319174166\r\n}"
 						}
 					]
 				},
@@ -957,7 +1093,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"names\":  [\"AAPL, TSLA\"],\r\n    \"dateBetween\": {\r\n        \"dateFrom\": \"2010-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    },\r\n    \"depositPeriodDays\": \"60\",\r\n    \"sum\": \"100\"\r\n}",
+							"raw": "{\r\n    \"names\": [\"AAPL\", \"TSLA\", \"GOOG\"],\r\n    \"dateBetween\": {\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    },\r\n    \"depositPeriodDays\": \"1460\",\r\n    \"depositSum\": \"1000\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -980,11 +1116,11 @@
 						{
 							"name": "Get statistics investment portfolio",
 							"originalRequest": {
-								"method": "GET",
+								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"names\":  [\"^GSPC\"],\r\n    \"dateBetween\": {\r\n        \"dateFrom\": \"2010-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    },\r\n    \"depositPeriodDays\": \"1460\",\r\n    \"sum\": \"1000\"\r\n}",
+									"raw": "{\r\n    \"names\": [\"AAPL\", \"TSLA\", \"GOOG\"],\r\n    \"dateBetween\": {\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    },\r\n    \"depositPeriodDays\": \"1460\",\r\n    \"depositSum\": \"1000\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1006,15 +1142,12 @@
 							"_postman_previewlanguage": null,
 							"header": null,
 							"cookie": [],
-							"body": "{\r\n    \"tickerNames\": [\r\n        \"sandp\"\r\n    ],\r\n    \"depositPeriodDays\": 1460,\r\n    \"minStat\": {\r\n        \"minDateStart\": \"2016-03-24\",\r\n        \"minDateEnd\": \"2020-03-23\",\r\n        \"minPriceStart\": 2035.94,\r\n        \"minPriceEnd\": 2237.4,\r\n        \"minPercentApy\": 2.3869638316051933,\r\n        \"minRevenue\": 1023.8696383160519\r\n    },\r\n    \"maxStat\": {\r\n        \"maxDateStart\": \"2010-07-06\",\r\n        \"maxDateEnd\": \"2014-07-03\",\r\n        \"maxPriceStart\": 1028.06,\r\n        \"maxPriceEnd\": 1985.44,\r\n        \"maxPercentApy\": 17.885279180392356,\r\n        \"maxRevenue\": 1178.8527918039235\r\n    },\r\n    \"avgPercent\": 11.47896702346303,\r\n    \"avgRevenue\": 1114.7896702346302\r\n}"
+							"body": "{\r\n    \"tickerNames\": [\r\n        \"AAPL\",\r\n        \"TSLA\",\r\n        \"GOOG\"\r\n    ],\r\n    \"depositPeriodDays\": 1460,\r\n    \"depositSum\": 1000.0,\r\n    \"minStat\": {\r\n        \"minDateStart\": \"2015-06-04\",\r\n        \"minDateEnd\": \"2019-06-03\",\r\n        \"minPriceStart\": 75.569666,\r\n        \"minPriceEnd\": 107.067835,\r\n        \"minPercentApy\": 9.1007860373985,\r\n        \"minRevenue\": 1091.007860373985\r\n    },\r\n    \"maxStat\": {\r\n        \"maxDateStart\": \"2018-04-02\",\r\n        \"maxDateEnd\": \"2022-04-01\",\r\n        \"maxPriceStart\": 108.825501,\r\n        \"maxPriceEnd\": 676.539994,\r\n        \"maxPercentApy\": 57.90311589571451,\r\n        \"maxRevenue\": 1579.0311589571452\r\n    },\r\n    \"avgPercent\": 30.396436206629208,\r\n    \"avgRevenue\": 1303.964362066292\r\n}"
 						}
 					]
 				},
 				{
 					"name": "Find max price by period",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"auth": {
 							"type": "basic",
@@ -1031,11 +1164,11 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"names\": [\"TSLA\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2019-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"names\": [\"^GSPC\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1061,7 +1194,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"dateFrom\": \"2019-01-01\",\r\n    \"dateTo\": \"2023-01-01\"\r\n}",
+									"raw": "{\r\n    \"names\": [\"AAPL\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1069,15 +1202,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/financials/max/tesla/",
+									"raw": "{{baseUrl}}/financials/max",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"financials",
-										"max",
-										"tesla",
-										""
+										"max"
 									]
 								}
 							},
@@ -1092,15 +1223,50 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\r\n    \"date\": {\r\n        \"name\": \"tesla\",\r\n        \"date\": \"2021-11-04\"\r\n    },\r\n    \"priceClose\": 409.97\r\n}"
+							"body": "{\r\n    \"date\": {\r\n        \"name\": \"AAPL\",\r\n        \"date\": \"2022-01-03\"\r\n    },\r\n    \"priceClose\": 182.009995\r\n}"
+						},
+						{
+							"name": "Find max price by period Copy",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"names\": [\"^GSPC\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/financials/max",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"financials",
+										"max"
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\r\n    \"date\": {\r\n        \"name\": \"^GSPC\",\r\n        \"date\": \"2022-01-03\"\r\n    },\r\n    \"priceClose\": 4796.560059\r\n}"
 						}
 					]
 				},
 				{
 					"name": "Find min price by period",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"auth": {
 							"type": "basic",
@@ -1117,11 +1283,11 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"names\": [\"TSLA\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2019-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"names\": [\"^GSPC\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1147,7 +1313,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"dateFrom\": \"2023-01-17\",\r\n    \"dateTo\": \"2023-01-26\"\r\n}",
+									"raw": "{\r\n    \"names\": [\"AAPL\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1155,14 +1321,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/financials/min/tesla",
+									"raw": "{{baseUrl}}/financials/min",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"financials",
-										"min",
-										"tesla"
+										"min"
 									]
 								}
 							},
@@ -1177,7 +1342,45 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\r\n    \"date\": {\r\n        \"name\": \"tesla\",\r\n        \"date\": \"2023-01-19\"\r\n    },\r\n    \"priceClose\": 127.17\r\n}"
+							"body": "{\r\n    \"date\": {\r\n        \"name\": \"AAPL\",\r\n        \"date\": \"2013-04-19\"\r\n    },\r\n    \"priceClose\": 13.9475\r\n}"
+						},
+						{
+							"name": "Find min price by period",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"names\": [\"^GSPC\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/financials/min",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"financials",
+										"min"
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\r\n    \"date\": {\r\n        \"name\": \"^GSPC\",\r\n        \"date\": \"2013-01-08\"\r\n    },\r\n    \"priceClose\": 1457.150024\r\n}"
 						}
 					]
 				},
@@ -1202,26 +1405,56 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/financials/correlation/AAPL/TSLA/3652",
+							"raw": "{{baseUrl}}/financials/correlation/%5EGSPC/TSLA/3652",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"financials",
 								"correlation",
-								"AAPL",
+								"%5EGSPC",
 								"TSLA",
 								"3652"
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Get correlation",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/financials/correlation/%5EGSPC/TSLA/3652",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"financials",
+										"correlation",
+										"%5EGSPC",
+										"TSLA",
+										"3652"
+									]
+								}
+							},
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "0.8962934352986949: strong correlation"
+						}
+					]
 				},
 				{
 					"name": "Get correlation with date",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"auth": {
 							"type": "basic",
@@ -1238,11 +1471,11 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"names\": [\"AAPL\", \"TSLA\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"names\": [\"^GSPC\", \"TSLA\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1264,11 +1497,11 @@
 						{
 							"name": "Get correlation with date",
 							"originalRequest": {
-								"method": "GET",
+								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"names\": [\"tesla\", \"sandp\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"names\": [\"AMZN\", \"AAPL\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2020-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1297,7 +1530,45 @@
 								}
 							],
 							"cookie": [],
-							"body": "0.8916685175783505: strong correlation"
+							"body": "0.3016014902157275: weak correlation"
+						},
+						{
+							"name": "Get correlation with date",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"names\": [\"^GSPC\", \"TSLA\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/financials/correlation",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"financials",
+										"correlation"
+									]
+								}
+							},
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "0.8962934352986949: strong correlation"
 						}
 					]
 				},
