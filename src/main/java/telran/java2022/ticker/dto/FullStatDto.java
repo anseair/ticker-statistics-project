@@ -13,6 +13,7 @@ public class FullStatDto {
 
 	String[] tickerNames;
 	long depositPeriodDays;
+	double depositSum;
 	
 	MinStatDto minStat;
 	MaxStatDto maxStat;

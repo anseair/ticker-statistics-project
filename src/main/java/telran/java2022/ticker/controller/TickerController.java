@@ -47,7 +47,7 @@ public class TickerController {
 	}
 	
 	@DeleteMapping("/{name}")
-	public boolean deleteAllTickersByName(@PathVariable String name) {
+	public int deleteAllTickersByName(@PathVariable String name) {
 		return service.deleteAllTickersByName(name);
 	}
 	
@@ -77,7 +77,7 @@ public class TickerController {
 	public FullStatDto getStatistic(@RequestBody NamesAndDatesForStatDto namesAndDatesForStatDto) {
 		return service.getStatistic(namesAndDatesForStatDto.getNames()[0], 
 				namesAndDatesForStatDto.getDateBetween(), 
-				namesAndDatesForStatDto.getSum(),
+				namesAndDatesForStatDto.getDepositSum(),
 				namesAndDatesForStatDto.getDepositPeriodDays());
 	}
 	
@@ -93,7 +93,10 @@ public class TickerController {
 	
 	@PostMapping("/statistic/investmentPortfolio")
 	public FullStatDto investmentPortfolio(@RequestBody NamesAndDatesForStatDto namesAndDatesForStatDto) {
-		return service.investmentPortfolio(namesAndDatesForStatDto.getNames(), namesAndDatesForStatDto.getDateBetween(), namesAndDatesForStatDto.getSum(), namesAndDatesForStatDto.getDepositPeriodDays());
+		return service.investmentPortfolio(namesAndDatesForStatDto.getNames(), 
+				namesAndDatesForStatDto.getDateBetween(), 
+				namesAndDatesForStatDto.getDepositSum(), 
+				namesAndDatesForStatDto.getDepositPeriodDays());
 	}
 	
 	@PostMapping("/download")

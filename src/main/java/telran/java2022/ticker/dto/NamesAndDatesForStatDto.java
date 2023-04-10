@@ -8,5 +8,5 @@ public class NamesAndDatesForStatDto  {
 	String[] names;
 	DateBetweenDto dateBetween;
 	long depositPeriodDays;
-	int sum;
+	double depositSum;
 }

@@ -55,15 +55,17 @@ public class TickerServiceImpl implements TickerService {
 	}
 	
 	@Override
-	public boolean deleteAllTickersByName(String name) {
-		if (repository.deleteAllTickersByDateName(name) != 0) {
-			return false;
-		};		
-		return true;
+	public int deleteAllTickersByName(String name) {
+//		return repository.deleteAllTickersByDateName(name);
+		
+		List<Ticker> ticker = repository.findTickerByDateName(name).collect(Collectors.toList());
+		System.out.println(ticker.size());
+		if (ticker.size() == 0) {
+			return 0;
+		}
+		repository.deleteAll(ticker);
+		return ticker.size();
 	}
-
-
-	
 	
 	@Override
 	public TickerDto findByDate(TickerId date) {
@@ -160,7 +162,7 @@ public class TickerServiceImpl implements TickerService {
 		double avgPercent = allStats.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
 		double avgRevenue = sum * (avgPercent/100) + sum;		
 		String[] names = {name};
-		return new FullStatDto(names, depositPeriodDays,
+		return new FullStatDto(names, depositPeriodDays, sum,
 				new MinStatDto(
 						allPeriod.get(indexMin).getDate().getDate(),
 						datesOfEnds.get(indexMin).getDate().getDate(),
@@ -194,10 +196,17 @@ public class TickerServiceImpl implements TickerService {
 				.map(t->t.getPriceClose())
 				.mapToDouble(Double::doubleValue)
 				.toArray();
+//		List<Ticker> tickers1 = repository
+//				.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name1, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+//				.collect(Collectors.toList());
+//		tickers1.forEach(t -> System.out.println(t));
 		double[] tickersSecond = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name2, dateBetweenDto.getDateFrom(), LocalDate.now())
 				.map(t->t.getPriceClose())
 				.mapToDouble(Double::doubleValue)
 				.toArray();
+//		System.out.println(repository
+//				.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name2, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+//				.collect(Collectors.toList()));
 		double correlation = new PearsonsCorrelation().correlation(tickersFirst,tickersSecond);		
 		String result = resultCorrelation(correlation);
 		return correlation + ": " + result;
@@ -386,7 +395,7 @@ public class TickerServiceImpl implements TickerService {
 		double avgRevenue = sum * (avgPercent / 100) + sum;
 		int indexMin = allStats.indexOf(minPercent);
 		int indexMax = allStats.indexOf(maxPercent);
-		return new FullStatDto(names, depositPeriodDays, 
+		return new FullStatDto(names, depositPeriodDays, sum,
 				new MinStatDto(
 						allPeriod.get(indexMin).getDate().getDate(),
 						datesOfEnds.get(indexMin).getDate().getDate(),
