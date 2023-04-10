@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import telran.java2022.ticker.dto.AllNamesDto;
-import telran.java2022.ticker.dto.DateBetweenDto;
 import telran.java2022.ticker.dto.FullStatDto;
 import telran.java2022.ticker.dto.NamesAndDatesDto;
 import telran.java2022.ticker.dto.NamesAndDatesForStatDto;
@@ -37,15 +35,20 @@ public class TickerController {
 	@GetMapping("/ticker/{name}/{date}")
 	public TickerDto findByDate(@PathVariable String date, @PathVariable String name) {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		LocalDate localDate = LocalDate.parse(date, dateTimeFormatter);
+		LocalDate localDate = LocalDate.parse(date, dateTimeFormatter);		
 		return service.findByDate(new TickerId(name, localDate));
 	}
 	
 	@DeleteMapping("/{name}/{date}")
-	public TickerDto remove(@PathVariable String date, @PathVariable String name) {
+	public TickerDto deleteByDate(@PathVariable String date, @PathVariable String name) {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate localDate = LocalDate.parse(date, dateTimeFormatter);
-		return service.remove(new TickerId(name,  localDate));
+		return service.deleteByDate(new TickerId(name,  localDate));
+	}
+	
+	@DeleteMapping("/{name}")
+	public boolean deleteAllTickersByName(@PathVariable String name) {
+		return service.deleteAllTickersByName(name);
 	}
 	
 	@PutMapping("/{name}/{date}")
@@ -55,49 +58,47 @@ public class TickerController {
 		return service.update(new TickerId(name, localDate), priceClose);
 	}
 	
-	@PostMapping("/max/{name}")
-	public TickerDto findMaxPriceByDatePeriod(@RequestBody DateBetweenDto dateBetweenDto,  @PathVariable String name) {
-		return service.findMaxPriceByDatePeriod(dateBetweenDto, name);
+	@PostMapping("/max")
+	public TickerDto findMaxPriceByDatePeriod(@RequestBody NamesAndDatesDto namesAndDatesDto) {
+		return service.findMaxPriceByDatePeriod(namesAndDatesDto.getDateBetween(), namesAndDatesDto.getNames()[0]);
 	}
 	
-	@PostMapping("/min/{name}")
-	public TickerDto findMinPriceByDatePeriod(@RequestBody DateBetweenDto dateBetweenDto, @PathVariable String name) {
-		return service.findMinPriceByDatePeriod(dateBetweenDto, name);
+	@PostMapping("/min")
+	public TickerDto findMinPriceByDatePeriod(@RequestBody NamesAndDatesDto namesAndDatesDto) {
+		return service.findMinPriceByDatePeriod(namesAndDatesDto.getDateBetween(), namesAndDatesDto.getNames()[0]);
 	}
 	
-	@GetMapping("/statistic/{name}/{periodDays}/{sum}/{termDays}")
-	public FullStatDto getStat(@PathVariable long periodDays, @PathVariable double sum, @PathVariable long termDays, @PathVariable String name) {
-		return service.getStatistic(periodDays, sum, termDays, name);
+	@GetMapping("/statistic/{name}/{periodDays}/{sum}/{depositPeriodDays}")
+	public FullStatDto getStatistic(@PathVariable String name, @PathVariable long periodDays, @PathVariable double sum, @PathVariable long depositPeriodDays) {
+		return service.getStatistic(name, periodDays, sum, depositPeriodDays);
 	}
 	
-	@GetMapping("/statistic")
-	public FullStatDto getStat(@RequestBody NamesAndDatesForStatDto namesAndDatesForStatDto) {
-		return service.getStatistic(namesAndDatesForStatDto);
+	@PostMapping("/statistic")
+	public FullStatDto getStatistic(@RequestBody NamesAndDatesForStatDto namesAndDatesForStatDto) {
+		return service.getStatistic(namesAndDatesForStatDto.getNames()[0], 
+				namesAndDatesForStatDto.getDateBetween(), 
+				namesAndDatesForStatDto.getSum(),
+				namesAndDatesForStatDto.getDepositPeriodDays());
 	}
 	
 	@GetMapping("/correlation/{name1}/{name2}/{termDays}")
-	public double getCorrelation(@PathVariable String name1, @PathVariable String name2, @PathVariable int termDays) {
+	public String getCorrelation(@PathVariable String name1, @PathVariable String name2, @PathVariable int termDays) {
 		return service.getCorrelation(name1, name2, termDays);
 	}
 	
-	@GetMapping("/correlation")
+	@PostMapping("/correlation")
 	public String getCorrelation(@RequestBody NamesAndDatesDto namesAndDatesDto) {
 		return service.getCorrelation(namesAndDatesDto.getNames()[0], namesAndDatesDto.getNames()[1], namesAndDatesDto.getDateBetween());
 	}
 	
-	@DeleteMapping("/{name}")
-	public boolean removeByName(@PathVariable String name) {
-		return service.removeByName(name);
+	@PostMapping("/statistic/investmentPortfolio")
+	public FullStatDto investmentPortfolio(@RequestBody NamesAndDatesForStatDto namesAndDatesForStatDto) {
+		return service.investmentPortfolio(namesAndDatesForStatDto.getNames(), namesAndDatesForStatDto.getDateBetween(), namesAndDatesForStatDto.getSum(), namesAndDatesForStatDto.getDepositPeriodDays());
 	}
 	
 	@PostMapping("/download")
 	public int downloadDataByTickerName(@RequestBody NamesAndDatesDto namesAndDatesDto) {
 		return service.downloadDataByTickerName(namesAndDatesDto.getNames(), namesAndDatesDto.getDateBetween());
-	}
-	
-	@GetMapping("/statistic/investmentPortfolio")
-	public FullStatDto investmentPortfolio(@RequestBody NamesAndDatesForStatDto namesAndDatesForStatDto) {
-		return service.investmentPortfolio(namesAndDatesForStatDto.getNames(), namesAndDatesForStatDto.getDateBetween(), namesAndDatesForStatDto.getSum(), namesAndDatesForStatDto.getDepositPeriodDays());
 	}
 	
 	@GetMapping("/tickers")
