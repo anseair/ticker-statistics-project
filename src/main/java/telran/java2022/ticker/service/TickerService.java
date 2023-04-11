@@ -35,4 +35,6 @@ public interface TickerService {
 	FullStatDto investmentPortfolio(String[] names, DateBetweenDto dateBetweenDto, double sum, long termDays);
 	
 	List<String> findAllNames();
+	
+	int updateAllTickers();
 }

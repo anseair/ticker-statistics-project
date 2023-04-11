@@ -15,17 +15,17 @@ import lombok.Setter;
 @EqualsAndHashCode(of = "login")
 public class User {
 	@Id
-	String login;
+	private String login;
 	@Setter
-	String password;
+	private String password;
 	@Setter
-	String firstName;
+	private String firstName;
 	@Setter
-	String lastName;
-	Set<String> roles;
+	private String lastName;
+	@Setter
+	private Set<String> roles = new HashSet<>();
 	
 	public User() {
-		roles = new HashSet<>();
 		roles.add("USER");
 	}
 	
@@ -38,11 +38,11 @@ public class User {
 	}
 
 	public boolean addRole(String role) {
-		return roles.add(role);
+		return roles.add(role.toUpperCase());
 	}
 
 	public boolean removeRole(String role) {
-		return roles.remove(role);
+		return roles.remove(role.toUpperCase());
 	}
 
 }

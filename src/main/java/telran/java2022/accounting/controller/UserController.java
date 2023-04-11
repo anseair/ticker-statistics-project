@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import telran.java2022.accounting.dto.RolesDto;
+import telran.java2022.accounting.dto.RolesChangeDto;
 import telran.java2022.accounting.dto.UserDto;
 import telran.java2022.accounting.dto.UserRegisterDto;
 import telran.java2022.accounting.dto.UserUpdateDto;
@@ -45,12 +45,12 @@ public class UserController {
 	}
 	
 	@PutMapping("/user/{login}/role/{role}")
-	public RolesDto addRole(@PathVariable String login, @PathVariable String role) {
+	public RolesChangeDto addRole(@PathVariable String login, @PathVariable String role) {
 		return service.changeRoles(login, role, true);
 	}
 	
 	@DeleteMapping("/user/{login}/role/{role}")
-	public RolesDto deleteRole(@PathVariable String login, @PathVariable String role) {
+	public RolesChangeDto deleteRole(@PathVariable String login, @PathVariable String role) {
 		return service.changeRoles(login, role, false);
 	}
 	

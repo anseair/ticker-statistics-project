@@ -1,4 +1,4 @@
-package telran.java2022.security.service;
+package telran.java2022.security;
 
 import java.util.Collection;
 

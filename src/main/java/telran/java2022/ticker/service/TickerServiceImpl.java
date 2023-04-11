@@ -192,21 +192,14 @@ public class TickerServiceImpl implements TickerService {
 	 */
 	@Override
 	public String getCorrelation(String name1, String name2,  DateBetweenDto dateBetweenDto) {
-		double[] tickersFirst = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name1, dateBetweenDto.getDateFrom(), LocalDate.now())
+		double[] tickersFirst = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name1, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
 				.map(t->t.getPriceClose())
 				.mapToDouble(Double::doubleValue)
 				.toArray();
-//		List<Ticker> tickers1 = repository
-//				.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name1, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
-//				.collect(Collectors.toList());
-//		tickers1.forEach(t -> System.out.println(t));
-		double[] tickersSecond = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name2, dateBetweenDto.getDateFrom(), LocalDate.now())
+		double[] tickersSecond = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name2, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
 				.map(t->t.getPriceClose())
 				.mapToDouble(Double::doubleValue)
 				.toArray();
-//		System.out.println(repository
-//				.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name2, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
-//				.collect(Collectors.toList()));
 		double correlation = new PearsonsCorrelation().correlation(tickersFirst,tickersSecond);		
 		String result = resultCorrelation(correlation);
 		return correlation + ": " + result;
@@ -246,51 +239,6 @@ public class TickerServiceImpl implements TickerService {
 		}
 		return res; 
 	}
-	
-	/**
-	 * Correlation with days without Apache
-	 */
-//	public double getCorrelationWithoutApache(String name1, String name2, int termDays) {
-//		LocalDate dateStart = LocalDate.now().minusDays(termDays);
-//		List<Double> tickersFirst = repository.findTickerByDateDateBetweenOrderByDateDate(dateStart, LocalDate.now())
-//				.filter(t -> t.getDate().getName().equals(name1))
-//				.map(t->t.getPriceClose())
-//				.collect(Collectors.toList());
-//		List<Double> tickersSecond = repository.findTickerByDateDateBetweenOrderByDateDate(dateStart, LocalDate.now())
-//				.filter(t -> t.getDate().getName().equals(name2))
-//				.map(t->t.getPriceClose())
-//				.collect(Collectors.toList());
-//	
-//		double sumX = tickersFirst.stream()
-//				.reduce(0.0, (x,y) -> x + y);
-//		double avgX = sumX / tickersFirst.size();
-//
-//		double sumY = tickersSecond.stream()
-//				.reduce(0.0, (x,y) -> x + y);
-//		double avgY = sumY / tickersSecond.size();
-//		
-//		double sumXY = tickersFirst.stream()
-//				.map(t-> t * tickersSecond.get(tickersFirst.indexOf(t)))
-//				.reduce(0.0, (x, y) -> x + y);
-//		double avgXY = sumXY / tickersFirst.size();
-//		
-//		double sumXX = tickersFirst.stream()
-//				.map(t->t*t)
-//				.reduce(0.0, (x,y)->x+y);
-//		double avgXX = sumXX / tickersFirst.size();
-//		
-//		double sumYY = tickersSecond.stream()
-//				.map(t->t*t)
-//				.reduce(0.0, (x,y)->x+y);
-//		double avgYY = sumYY / tickersSecond.size();
-//				
-//		double varianceX = avgXX - avgX * avgX;
-//		double varianceY = avgYY - avgY * avgY;
-//		double covarianceXY = avgXY - avgX * avgY;
-//		double correlation = covarianceXY / Math.sqrt(varianceX*varianceY);
-//				
-//		return correlation;
-//	}
 	
 	/**
 	 * Downloading new data by name and date between
@@ -427,13 +375,22 @@ public class TickerServiceImpl implements TickerService {
 	
 	@Override
 	public 	List<String> findAllNames(){
-		List<String> names =  repository.findAllByOrderByDateName().map(t -> t.getDate().getName()).distinct().collect(Collectors.toList());
-		return names;
-//		LocalDate date = LocalDate.of(2020, 1, 7);
-//		return repository.findByDateDateOrderByDateName(date)
-//				.map(t->t.getDate().getName())
-//				.collect(Collectors.toList());
+		LocalDate date = LocalDate.of(2020, 1, 7);
+		return repository.findByDateDateOrderByDateName(date)
+				.map(t->t.getDate().getName())
+				.collect(Collectors.toList());
 	};
 
+	@Override
+	public int updateAllTickers() {
+		List<String> names = findAllNames();
+		List<Integer> res = new ArrayList<>();
+		names.stream()
+			.forEach(n -> {
+				String[] arr = {n};
+				res.add(downloadDataByTickerName(arr, new DateBetweenDto(LocalDate.now().minusDays(10), LocalDate.now())));
+			});
+		return res.stream().mapToInt(i -> i).sum();
+	}
 
 }

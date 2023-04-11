@@ -109,5 +109,9 @@ public class TickerController {
 		return service.findAllNames();
 	}
 	
+	@PostMapping("/update/all")
+	public int updateAllTickers() {
+		return service.updateAllTickers();
+	}
 	
 }
