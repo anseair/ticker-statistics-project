@@ -27,7 +27,7 @@ import telran.java2022.ticker.service.TickerService;
 public class TickerController {
 	final TickerService service;
 	
-	@PostMapping("/ticker")
+	@PostMapping("/add/ticker")
 	public TickerDto add(@RequestBody TickerDto tickerDto) {
 		return service.add(tickerDto);
 	}
@@ -70,12 +70,12 @@ public class TickerController {
 	
 	@GetMapping("/statistic/{name}/{periodDays}/{sum}/{depositPeriodDays}")
 	public FullStatDto getStatistic(@PathVariable String name, @PathVariable long periodDays, @PathVariable double sum, @PathVariable long depositPeriodDays) {
-		return service.getStatistic(name, periodDays, sum, depositPeriodDays);
+		return service.statistic(name, periodDays, sum, depositPeriodDays);
 	}
 	
 	@PostMapping("/statistic")
 	public FullStatDto getStatistic(@RequestBody NamesAndDatesForStatDto namesAndDatesForStatDto) {
-		return service.getStatistic(namesAndDatesForStatDto.getNames()[0], 
+		return service.statistic(namesAndDatesForStatDto.getNames()[0], 
 				namesAndDatesForStatDto.getDateBetween(), 
 				namesAndDatesForStatDto.getDepositSum(),
 				namesAndDatesForStatDto.getDepositPeriodDays());
@@ -83,12 +83,12 @@ public class TickerController {
 	
 	@GetMapping("/correlation/{name1}/{name2}/{termDays}")
 	public String getCorrelation(@PathVariable String name1, @PathVariable String name2, @PathVariable int termDays) {
-		return service.getCorrelation(name1, name2, termDays);
+		return service.correlation(name1, name2, termDays);
 	}
 	
 	@PostMapping("/correlation")
 	public String getCorrelation(@RequestBody NamesAndDatesDto namesAndDatesDto) {
-		return service.getCorrelation(namesAndDatesDto.getNames()[0], namesAndDatesDto.getNames()[1], namesAndDatesDto.getDateBetween());
+		return service.correlation(namesAndDatesDto.getNames()[0], namesAndDatesDto.getNames()[1], namesAndDatesDto.getDateBetween());
 	}
 	
 	@PostMapping("/statistic/investmentPortfolio")

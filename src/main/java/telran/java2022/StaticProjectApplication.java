@@ -17,7 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import telran.java2022.accounting.dao.UserRepository;
+import telran.java2022.accounting.model.User;
 import telran.java2022.ticker.dao.TickerRepository;
 import telran.java2022.ticker.model.Ticker;
 import telran.java2022.ticker.model.TickerId;
@@ -28,16 +31,21 @@ import yahoofinance.histquotes.HistoricalQuote;
 import yahoofinance.histquotes.Interval;
 
 @SpringBootApplication
-public class FirstProjectApplication implements CommandLineRunner{
+public class StaticProjectApplication implements CommandLineRunner{
 
 	@Autowired
 	TickerRepository repository;
+	
+	UserRepository userRepository;
+	
+	PasswordEncoder encoder;
+	
 	public static void main(String[] args) {
-		SpringApplication.run(FirstProjectApplication.class, args);
+		SpringApplication.run(StaticProjectApplication.class, args);
 	}
 
 	@Override
-	public void run(String... args) throws Exception {		
+	public void run(String... args) throws Exception {
 		
 //======RUN ONLY FOR DOWNLOAD NEW DATA=============================================
 		

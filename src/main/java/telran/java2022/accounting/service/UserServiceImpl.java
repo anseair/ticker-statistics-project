@@ -79,21 +79,18 @@ public class UserServiceImpl implements UserService, CommandLineRunner {
 		String password = passwordEncoder.encode(newPassword);
 		user.setPassword(password);
 		repository.save(user);
-	}
+	}	
 	
 	@Override
 	public void run(String... args) throws Exception {
 		if(!repository.existsById("admin")) {
 			String password = passwordEncoder.encode("admin");
-			User user = new User("admin", password , "", "");
+			User user = new User("admin", password, "", "");
+			user.addRole("ADMIN");
 			user.addRole("MODERATOR");
-			user.addRole("ADMINISTRATOR");
 			repository.save(user);
 		}
 		
 	}
-	
-	
-	
 
 }

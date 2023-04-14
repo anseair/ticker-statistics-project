@@ -99,7 +99,7 @@ public class TickerServiceImpl implements TickerService {
 	 * Statistic with LocalDate from - to
 	 */
 	@Override
-	public FullStatDto getStatistic(String name, DateBetweenDto dateBetweenDto, double sum, long depositPeriodDays) {
+	public FullStatDto statistic(String name, DateBetweenDto dateBetweenDto, double sum, long depositPeriodDays) {
 		List<Double> allStats = new ArrayList<>();
 		List<Ticker> allPeriod = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
 				.collect(Collectors.toList());		
@@ -182,16 +182,16 @@ public class TickerServiceImpl implements TickerService {
 	 * Statistic with days
 	 */
 	@Override
-	public FullStatDto getStatistic(String name, long periodDays, double sum, long depositPeriodDays) {
+	public FullStatDto statistic(String name, long periodDays, double sum, long depositPeriodDays) {
 			DateBetweenDto dateBetweenDto = new DateBetweenDto(LocalDate.now().minusDays(periodDays), LocalDate.now());
-			return getStatistic(name, dateBetweenDto, sum, depositPeriodDays);
+			return statistic(name, dateBetweenDto, sum, depositPeriodDays);
 	}
 	
 	/**
 	 * Correlation with LocalDate from - to
 	 */
 	@Override
-	public String getCorrelation(String name1, String name2,  DateBetweenDto dateBetweenDto) {
+	public String correlation(String name1, String name2,  DateBetweenDto dateBetweenDto) {
 		double[] tickersFirst = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name1, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
 				.map(t->t.getPriceClose())
 				.mapToDouble(Double::doubleValue)
@@ -209,9 +209,9 @@ public class TickerServiceImpl implements TickerService {
 	 * Correlation with days
 	 */
 	@Override
-	public String getCorrelation(String name1, String name2, int termDays) {
+	public String correlation(String name1, String name2, int termDays) {
 		DateBetweenDto dateBetweenDto = new DateBetweenDto(LocalDate.now().minusDays(termDays), LocalDate.now());
-		return getCorrelation(name1, name2, dateBetweenDto);
+		return correlation(name1, name2, dateBetweenDto);
 	}
 	
 	private String resultCorrelation(double correlation) {		

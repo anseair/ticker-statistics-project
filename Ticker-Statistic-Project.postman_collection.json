@@ -45,7 +45,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"login\": \"JavaFan\",\n    \"password\": \"1234\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Smith\"\n}",
+									"raw": "{\n    \"login\": \"test\",\n    \"password\": \"test\",\n    \"firstName\": \"test\",\n    \"lastName\": \"test\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -67,7 +67,7 @@
 							"_postman_previewlanguage": "json",
 							"header": [],
 							"cookie": [],
-							"body": "{\n    \"login\": \"JavaFan\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Smith\",\n    \"roles\": [\n        \"USER\"\n    ]\n}"
+							"body": "{\n    \"login\": \"test\",\n    \"firstName\": \"test\",\n    \"lastName\": \"test\",\n    \"roles\": [\n        \"USER\"\n    ]\n}"
 						}
 					]
 				},
@@ -110,7 +110,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"login\": \"JavaFan\",\n    \"password\": \"1234\"\n}",
+									"raw": "{\n    \"login\": \"test\",\n    \"password\": \"test\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -132,7 +132,7 @@
 							"_postman_previewlanguage": "json",
 							"header": [],
 							"cookie": [],
-							"body": "{\n    \"login\": \"JavaFan\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Smith\",\n    \"roles\": [\n        \"USER\"\n    ]\n}"
+							"body": "{\n    \"login\": \"test\",\n    \"firstName\": \"test\",\n    \"lastName\": \"test\",\n    \"roles\": [\n        \"USER\"\n    ]\n}"
 						}
 					]
 				},
@@ -175,14 +175,14 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/account/user/JavaFan",
+									"raw": "{{baseUrl}}/account/user/test",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"account",
 										"user",
-										"JavaFan"
+										"test"
 									]
 								}
 							},
@@ -190,7 +190,7 @@
 							"_postman_previewlanguage": "json",
 							"header": [],
 							"cookie": [],
-							"body": "{\n    \"login\": \"JavaFan\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Smith\",\n    \"roles\": [\n        \"USER\"\n    ]\n}"
+							"body": "{\n    \"login\": \"test\",\n    \"firstName\": \"test\",\n    \"lastName\": \"test\",\n    \"roles\": [\n        \"USER\"\n    ]\n}"
 						}
 					]
 				},
@@ -243,7 +243,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Smith\"\n}",
+									"raw": "{\n    \"firstName\": \"test1\",\n    \"lastName\": \"test1\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -251,14 +251,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/account/user/JavaFan",
+									"raw": "{{baseUrl}}/account/user/test",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"account",
 										"user",
-										"JavaFan"
+										"test"
 									]
 								}
 							},
@@ -266,7 +266,7 @@
 							"_postman_previewlanguage": "json",
 							"header": [],
 							"cookie": [],
-							"body": "{\n    \"login\": \"JavaFan\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Smith\",\n    \"roles\": [\n        \"USER\"\n    ]\n}"
+							"body": "{\n    \"login\": \"test\",\n    \"firstName\": \"test1\",\n    \"lastName\": \"test1\",\n    \"roles\": [\n        \"USER\"\n    ]\n}"
 						}
 					]
 				},
@@ -313,14 +313,14 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/account/user/JavaFan/role/moderator",
+									"raw": "{{baseUrl}}/account/user/test/role/moderator",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"account",
 										"user",
-										"JavaFan",
+										"test",
 										"role",
 										"moderator"
 									]
@@ -330,7 +330,7 @@
 							"_postman_previewlanguage": "json",
 							"header": [],
 							"cookie": [],
-							"body": "{\n    \"login\": \"JavaFan\",\n    \"roles\": [\n        \"USER\",\n        \"MODERATOR\"\n    ]\n}"
+							"body": "{\n    \"login\": \"test\",\n    \"roles\": [\n        \"USER\",\n        \"MODERATOR\"\n    ]\n}"
 						}
 					]
 				},
@@ -377,14 +377,14 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/account/user/JavaFan/role/moderator",
+									"raw": "{{baseUrl}}/account/user/test/role/moderator",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"account",
 										"user",
-										"JavaFan",
+										"test",
 										"role",
 										"moderator"
 									]
@@ -393,7 +393,7 @@
 							"_postman_previewlanguage": "json",
 							"header": [],
 							"cookie": [],
-							"body": "{\n    \"login\": \"JavaFan\",\n    \"roles\": [\n        \"USER\"\n    ]\n}"
+							"body": "{\n    \"login\": \"test\",\n    \"roles\": [\n        \"USER\"\n    ]\n}"
 						}
 					]
 				},
@@ -446,7 +446,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"login\": \"JavaFan\",\n    \"password\": \"12345\"\n}",
+									"raw": "{\n    \"login\": \"test\",\n    \"password\": \"test1\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -454,7 +454,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/account/changePassword/user/admin",
+									"raw": "{{baseUrl}}/account/changePassword/user/test",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -462,7 +462,7 @@
 										"account",
 										"changePassword",
 										"user",
-										"admin"
+										"test"
 									]
 								}
 							},
@@ -580,7 +580,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/financials/ticker/AAPL/2022-01-20",
+							"raw": "{{baseUrl}}/financials/ticker/AAPL/2022-12-15",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -588,7 +588,7 @@
 								"financials",
 								"ticker",
 								"AAPL",
-								"2022-01-20"
+								"2022-12-15"
 							]
 						}
 					},
@@ -753,37 +753,7 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "Delete Ticker by name",
-							"originalRequest": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/financials/GC=F",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"financials",
-										"GC=F"
-									]
-								}
-							},
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json",
-									"name": "Content-Type",
-									"description": "",
-									"type": "text"
-								}
-							],
-							"cookie": [],
-							"body": "true"
-						}
-					]
+					"response": []
 				},
 				{
 					"name": "Update Ticker",
@@ -1173,7 +1143,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\r\n    \"tickerNames\": [\r\n        \"^GSPC\"\r\n    ],\r\n    \"depositPeriodDays\": 1460,\r\n    \"depositSum\": 1000.0,\r\n    \"minStat\": {\r\n        \"minDateStart\": \"2016-03-24\",\r\n        \"minDateEnd\": \"2020-03-23\",\r\n        \"minPriceStart\": 2035.939941,\r\n        \"minPriceEnd\": 2237.399902,\r\n        \"minPercentApy\": 2.3869634522205807,\r\n        \"minRevenue\": 1023.8696345222058\r\n    },\r\n    \"maxStat\": {\r\n        \"maxDateStart\": \"2017-09-05\",\r\n        \"maxDateEnd\": \"2021-09-03\",\r\n        \"maxPriceStart\": 2457.850098,\r\n        \"maxPriceEnd\": 4535.430176,\r\n        \"maxPercentApy\": 16.550938058035204,\r\n        \"maxRevenue\": 1165.509380580352\r\n    },\r\n    \"avgPercent\": 10.825986750663464,\r\n    \"avgRevenue\": 1108.2598675066347\r\n}"
+							"body": "{\r\n    \"tickerNames\": [\r\n        \"^GSPC\"\r\n    ],\r\n    \"depositPeriodDays\": 1460,\r\n    \"depositSum\": 1000.0,\r\n    \"minStat\": {\r\n        \"minDateStart\": \"2016-03-24\",\r\n        \"minDateEnd\": \"2020-03-23\",\r\n        \"minPriceStart\": 2035.939941,\r\n        \"minPriceEnd\": 2237.399902,\r\n        \"minPercentApy\": 2.3869634522205807,\r\n        \"minRevenue\": 1023.8696345222058\r\n    },\r\n    \"maxStat\": {\r\n        \"maxDateStart\": \"2017-09-05\",\r\n        \"maxDateEnd\": \"2021-09-03\",\r\n        \"maxPriceStart\": 2457.850098,\r\n        \"maxPriceEnd\": 4535.430176,\r\n        \"maxPercentApy\": 16.550938058035204,\r\n        \"maxRevenue\": 1165.509380580352\r\n    },\r\n    \"avgPercent\": 10.824387140332437,\r\n    \"avgRevenue\": 1108.2438714033244\r\n}"
 						}
 					]
 				},
@@ -1185,7 +1155,7 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "1234",
+									"value": "test",
 									"type": "string"
 								},
 								{
@@ -1199,7 +1169,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"names\": [\"AAPL\"],\r\n    \"dateBetween\": {\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    },\r\n    \"depositPeriodDays\": \"1460\",\r\n    \"depositSum\": \"10\"\r\n}",
+							"raw": "{\r\n    \"names\": [\"^GSPC\"],\r\n    \"dateBetween\": {\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    },\r\n    \"depositPeriodDays\": \"1460\",\r\n    \"depositSum\": \"1000\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1364,10 +1334,18 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
 							"cookie": [],
-							"body": "{\r\n    \"tickerNames\": [\r\n        \"AAPL\",\r\n        \"TSLA\",\r\n        \"GOOG\"\r\n    ],\r\n    \"depositPeriodDays\": 1460,\r\n    \"depositSum\": 1000.0,\r\n    \"minStat\": {\r\n        \"minDateStart\": \"2015-06-04\",\r\n        \"minDateEnd\": \"2019-06-03\",\r\n        \"minPriceStart\": 75.569666,\r\n        \"minPriceEnd\": 107.067835,\r\n        \"minPercentApy\": 9.1007860373985,\r\n        \"minRevenue\": 1091.007860373985\r\n    },\r\n    \"maxStat\": {\r\n        \"maxDateStart\": \"2018-04-02\",\r\n        \"maxDateEnd\": \"2022-04-01\",\r\n        \"maxPriceStart\": 108.825501,\r\n        \"maxPriceEnd\": 676.539994,\r\n        \"maxPercentApy\": 57.90311589571451,\r\n        \"maxRevenue\": 1579.0311589571452\r\n    },\r\n    \"avgPercent\": 30.396436206629208,\r\n    \"avgRevenue\": 1303.964362066292\r\n}"
+							"body": "{\n    \"tickerNames\": [\n        \"AAPL\",\n        \"TSLA\",\n        \"GOOG\"\n    ],\n    \"depositPeriodDays\": 1460,\n    \"depositSum\": 1000,\n    \"minStat\": {\n        \"minDateStart\": \"2015-06-04\",\n        \"minDateEnd\": \"2019-06-03\",\n        \"minPriceStart\": 75.569666,\n        \"minPriceEnd\": 107.067835,\n        \"minPercentApy\": 9.1007860373985,\n        \"minRevenue\": 1091.007860373985\n    },\n    \"maxStat\": {\n        \"maxDateStart\": \"2018-04-02\",\n        \"maxDateEnd\": \"2022-04-01\",\n        \"maxPriceStart\": 108.825501,\n        \"maxPriceEnd\": 676.539994,\n        \"maxPercentApy\": 57.90311589571451,\n        \"maxRevenue\": 1579.0311589571452\n    },\n    \"avgPercent\": 30.396436206629208,\n    \"avgRevenue\": 1303.964362066292\n}"
 						}
 					]
 				},
@@ -1379,7 +1357,7 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "1234",
+									"value": "test",
 									"type": "string"
 								},
 								{
@@ -1392,7 +1370,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/financials/correlation/%5EGSPC/TSLA/3652",
+							"raw": "{{baseUrl}}/financials/correlation/%5EGSPC/AAPL/3652",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -1400,7 +1378,7 @@
 								"financials",
 								"correlation",
 								"%5EGSPC",
-								"TSLA",
+								"AAPL",
 								"3652"
 							]
 						}
@@ -1436,7 +1414,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "0.8962934352986949: strong correlation"
+							"body": "0.8963693715915377: strong correlation"
 						}
 					]
 				},
@@ -1462,7 +1440,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"names\": [\"AAPL\", \"AMZN\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2020-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"names\": [\"^GSPC\", \"AAPL\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1517,7 +1495,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "0.3016014902157275: weak correlation"
+							"body": "0.4142594742449804: weak correlation"
 						},
 						{
 							"name": "Correlation with dates",
@@ -1526,7 +1504,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"names\": [\"^GSPC\", \"TSLA\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"names\": [\"^GSPC\", \"AAPL\"],\r\n    \"dateBetween\":{\r\n        \"dateFrom\": \"2013-01-01\",\r\n        \"dateTo\": \"2023-01-01\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1555,7 +1533,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "0.8962934352986949: strong correlation"
+							"body": "0.9634119681663378: very strong correlation"
 						}
 					]
 				},

@@ -22,13 +22,13 @@ public interface TickerService {
 	
 	TickerDto findMinPriceByDatePeriod(DateBetweenDto dateBetweenDto, String name);
 
-	FullStatDto getStatistic(String name, long periodDays, double sum, long depositPeriodDays);
+	FullStatDto statistic(String name, long periodDays, double sum, long depositPeriodDays);
 	
-	FullStatDto getStatistic(String name, DateBetweenDto dateBetweenDto, double sum, long depositPeriodDays);
+	FullStatDto statistic(String name, DateBetweenDto dateBetweenDto, double sum, long depositPeriodDays);
 	
-	String getCorrelation(String name1, String name2, int termDays);
+	String correlation(String name1, String name2, int termDays);
 		
-	String getCorrelation(String name1, String name2, DateBetweenDto dateBetweenDto);
+	String correlation(String name1, String name2, DateBetweenDto dateBetweenDto);
 	
 	int downloadDataByTickerName(String[] names, DateBetweenDto dateBetweenDto);
 	
