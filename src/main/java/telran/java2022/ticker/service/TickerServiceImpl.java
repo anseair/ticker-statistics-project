@@ -375,6 +375,8 @@ public class TickerServiceImpl implements TickerService {
 	
 	@Override
 	public 	List<String> findAllNames(){
+//		List<String> names =  repository.findAllByOrderByDateName().map(t -> t.getDate().getName()).distinct().collect(Collectors.toList());
+//		return names;
 		LocalDate date = LocalDate.of(2020, 1, 7);
 		return repository.findByDateDateOrderByDateName(date)
 				.map(t->t.getDate().getName())

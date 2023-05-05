@@ -17,18 +17,17 @@ public class SecurityService {
 	public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.httpBasic();
 		httpSecurity.csrf().disable();
+		httpSecurity.cors();
 		httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		httpSecurity.authorizeRequests(authorize -> authorize
-				.mvcMatchers("/account/register/**", "/financials/ticker/*/*/**", "/financials/tickers/**").permitAll()
-				.mvcMatchers("/account/user/*/role/*/**", "/financials/download/**", "/financials/add/ticker/**", "/financials/update/all").hasRole("ADMINISTRATOR")
-				.mvcMatchers(HttpMethod.DELETE, "/financials/**").hasRole("ADMINISTRATOR")
-				.mvcMatchers(HttpMethod.PUT, "/financials/**").hasRole("ADMINISTRATOR")
-				.mvcMatchers(HttpMethod.PUT, "/account/user/{login}*").access("#login == authentication.name")
-				.mvcMatchers(HttpMethod.DELETE, "/account/user/{login}*").access("#login == authentication.name or hasRole('ADMINISTRATOR')")
-				.mvcMatchers(HttpMethod.PUT, "/account/changePassword/user/{login}*").access("#login == authentication.name")
-				.anyRequest().authenticated());
+					.mvcMatchers("/account/register/**", "/financials/ticker/*/*/**", "/financials/tickers/**", "/financials/max/**", "/financials/min/**").permitAll()
+					.mvcMatchers("/account/user/*/role/*/**", "/financials/download/**", "/financials/add/ticker/**", "/financials/update/all").hasRole("ADMINISTRATOR")
+					.mvcMatchers(HttpMethod.DELETE, "/financials/**").hasRole("ADMINISTRATOR")
+					.mvcMatchers(HttpMethod.PUT, "/financials/**").hasRole("ADMINISTRATOR")
+					.mvcMatchers(HttpMethod.PUT, "/account/user/{login}*").access("#login == authentication.name")
+					.mvcMatchers(HttpMethod.DELETE, "/account/user/{login}*").access("#login == authentication.name or hasRole('ADMINISTRATOR')")
+					.mvcMatchers(HttpMethod.PUT, "/account/changePassword/user/{login}*").access("#login == authentication.name")
+					.anyRequest().authenticated());
 		return httpSecurity.build();
-		
 	}
-
 }

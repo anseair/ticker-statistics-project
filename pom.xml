@@ -8,9 +8,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>telran.java2022</groupId>
-	<artifactId>first-project</artifactId>
+	<artifactId>ticker-statistic-project</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>first-project</name>
+	<name>ticker-statistic-project</name>
 	<description>spring boot first project</description>
 	<properties>
 		<java.version>11</java.version>

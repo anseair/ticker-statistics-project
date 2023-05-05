@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,11 +28,13 @@ import telran.java2022.ticker.service.TickerService;
 public class TickerController {
 	final TickerService service;
 	
+	@CrossOrigin
 	@PostMapping("/add/ticker")
 	public TickerDto add(@RequestBody TickerDto tickerDto) {
 		return service.add(tickerDto);
 	}
 	
+	@CrossOrigin
 	@GetMapping("/ticker/{name}/{date}")
 	public TickerDto findByDate(@PathVariable String date, @PathVariable String name) {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -39,6 +42,7 @@ public class TickerController {
 		return service.findByDate(new TickerId(name, localDate));
 	}
 	
+	@CrossOrigin
 	@DeleteMapping("/{name}/{date}")
 	public TickerDto deleteByDate(@PathVariable String date, @PathVariable String name) {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -46,11 +50,13 @@ public class TickerController {
 		return service.deleteByDate(new TickerId(name,  localDate));
 	}
 	
+	@CrossOrigin
 	@DeleteMapping("/{name}")
 	public int deleteAllTickersByName(@PathVariable String name) {
 		return service.deleteAllTickersByName(name);
 	}
 	
+	@CrossOrigin
 	@PutMapping("/{name}/{date}")
 	public TickerDto update(@PathVariable String date, @RequestBody double priceClose, @PathVariable String name) {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -58,21 +64,25 @@ public class TickerController {
 		return service.update(new TickerId(name, localDate), priceClose);
 	}
 	
+	@CrossOrigin
 	@PostMapping("/max")
 	public TickerDto findMaxPriceByDatePeriod(@RequestBody NamesAndDatesDto namesAndDatesDto) {
 		return service.findMaxPriceByDatePeriod(namesAndDatesDto.getDateBetween(), namesAndDatesDto.getNames()[0]);
 	}
 	
+	@CrossOrigin
 	@PostMapping("/min")
 	public TickerDto findMinPriceByDatePeriod(@RequestBody NamesAndDatesDto namesAndDatesDto) {
 		return service.findMinPriceByDatePeriod(namesAndDatesDto.getDateBetween(), namesAndDatesDto.getNames()[0]);
 	}
 	
+	@CrossOrigin
 	@GetMapping("/statistic/{name}/{periodDays}/{sum}/{depositPeriodDays}")
 	public FullStatDto getStatistic(@PathVariable String name, @PathVariable long periodDays, @PathVariable double sum, @PathVariable long depositPeriodDays) {
 		return service.statistic(name, periodDays, sum, depositPeriodDays);
 	}
 	
+	@CrossOrigin
 	@PostMapping("/statistic")
 	public FullStatDto getStatistic(@RequestBody NamesAndDatesForStatDto namesAndDatesForStatDto) {
 		return service.statistic(namesAndDatesForStatDto.getNames()[0], 
@@ -81,16 +91,19 @@ public class TickerController {
 				namesAndDatesForStatDto.getDepositPeriodDays());
 	}
 	
+	@CrossOrigin
 	@GetMapping("/correlation/{name1}/{name2}/{termDays}")
 	public String getCorrelation(@PathVariable String name1, @PathVariable String name2, @PathVariable int termDays) {
 		return service.correlation(name1, name2, termDays);
 	}
 	
+	@CrossOrigin
 	@PostMapping("/correlation")
 	public String getCorrelation(@RequestBody NamesAndDatesDto namesAndDatesDto) {
 		return service.correlation(namesAndDatesDto.getNames()[0], namesAndDatesDto.getNames()[1], namesAndDatesDto.getDateBetween());
 	}
 	
+	@CrossOrigin
 	@PostMapping("/statistic/investmentPortfolio")
 	public FullStatDto investmentPortfolio(@RequestBody NamesAndDatesForStatDto namesAndDatesForStatDto) {
 		return service.investmentPortfolio(namesAndDatesForStatDto.getNames(), 
@@ -99,16 +112,19 @@ public class TickerController {
 				namesAndDatesForStatDto.getDepositPeriodDays());
 	}
 	
+	@CrossOrigin
 	@PostMapping("/download")
 	public int downloadDataByTickerName(@RequestBody NamesAndDatesDto namesAndDatesDto) {
 		return service.downloadDataByTickerName(namesAndDatesDto.getNames(), namesAndDatesDto.getDateBetween());
 	}
 	
+	@CrossOrigin
 	@GetMapping("/tickers")
 	public List<String> findAllTickerNames(){
 		return service.findAllNames();
 	}
 	
+	@CrossOrigin
 	@PostMapping("/update/all")
 	public int updateAllTickers() {
 		return service.updateAllTickers();
