@@ -285,7 +285,7 @@ public class TickerServiceImpl implements TickerService {
 		
 //		System.out.println(from);
 //		System.out.println(to);
-
+		
 		Stock tickerRequest = null;
 		try {
 			tickerRequest = YahooFinance.get(name);

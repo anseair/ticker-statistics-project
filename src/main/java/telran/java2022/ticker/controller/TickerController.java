@@ -112,7 +112,7 @@ public class TickerController {
 				namesAndDatesForStatDto.getDepositPeriodDays());
 	}
 	
-	@CrossOrigin
+//	@CrossOrigin
 	@PostMapping("/download")
 	public int downloadDataByTickerName(@RequestBody NamesAndDatesDto namesAndDatesDto) {
 		return service.downloadDataByTickerName(namesAndDatesDto.getNames(), namesAndDatesDto.getDateBetween());
