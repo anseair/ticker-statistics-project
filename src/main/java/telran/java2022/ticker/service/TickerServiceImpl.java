@@ -21,9 +21,11 @@ import telran.java2022.ticker.exceptions.TickerNotFoundException;
 import telran.java2022.ticker.dao.TickerRepository;
 import telran.java2022.ticker.dto.DateBetweenDto;
 import telran.java2022.ticker.dto.FullStatDto;
+import telran.java2022.ticker.dto.LastPriceDto;
 import telran.java2022.ticker.dto.MaxStatDto;
 import telran.java2022.ticker.dto.MinStatDto;
 import telran.java2022.ticker.dto.TickerDto;
+import telran.java2022.ticker.dto.TickersMinMaxDto;
 import telran.java2022.ticker.model.Ticker;
 import telran.java2022.ticker.model.TickerId;
 import yahoofinance.Stock;
@@ -79,20 +81,6 @@ public class TickerServiceImpl implements TickerService {
 		ticker.setPriceClose(priceClose);
 		repository.save(ticker);
 		return modelMapper.map(ticker, TickerDto.class);
-	}
-
-	@Override
-	public TickerDto findMaxPriceByDatePeriod(DateBetweenDto dateBetweenDto, String name) {
-		Ticker s = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
-				.max((s1, s2) -> Double.compare(s1.getPriceClose(), s2.getPriceClose())).orElse(null);
-		return modelMapper.map(s, TickerDto.class);
-	}
-
-	@Override
-	public TickerDto findMinPriceByDatePeriod(DateBetweenDto dateBetweenDto, String name) {
-		Ticker s = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
-				.min((s1, s2) -> Double.compare(s1.getPriceClose(), s2.getPriceClose())).orElse(null);
-		return modelMapper.map(s, TickerDto.class);
 	}
 	
 	/**
@@ -289,6 +277,7 @@ public class TickerServiceImpl implements TickerService {
 		Stock tickerRequest = null;
 		try {
 			tickerRequest = YahooFinance.get(name);
+			System.out.println(tickerRequest);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -395,4 +384,38 @@ public class TickerServiceImpl implements TickerService {
 		return res.stream().mapToInt(i -> i).sum();
 	}
 
+	@Override
+	public 	List<TickerDto> findAllPricesByPeriod(DateBetweenDto dateBetweenDto, String name){
+		List<Ticker> allPeriod = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+				.collect(Collectors.toList());
+		List<TickerDto> tickerDtos = allPeriod.stream().map(t -> modelMapper.map(t, TickerDto.class)).collect(Collectors.toList());
+		return tickerDtos;
+	}
+	
+	@Override
+	public TickersMinMaxDto findMinMaxPricesByDatePeriod(DateBetweenDto dateBetweenDto, String name) {
+		Ticker tickerMin = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+				.min((s1, s2) -> Double.compare(s1.getPriceClose(), s2.getPriceClose())).orElse(null);
+		Ticker tickerMax = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+				.max((s1, s2) -> Double.compare(s1.getPriceClose(), s2.getPriceClose())).orElse(null);
+		TickerDto tickerMinDto = modelMapper.map(tickerMin, TickerDto.class);
+		TickerDto tickerMaxDto = modelMapper.map(tickerMax, TickerDto.class);
+		return new TickersMinMaxDto(tickerMinDto, tickerMaxDto);
+	}
+
+	@Override
+	public LastPriceDto findLastPrice(String name) {
+		Ticker lastTicker = repository.findTickerByDateName(name).reduce((first, second) -> second).orElseThrow(() -> new TickerNotFoundException());
+		TickerDto lastTickerDto = modelMapper.map(lastTicker, TickerDto.class);
+		Ticker penultimateTicker = repository.findTickerByDateName(name)
+				.skip(repository.findTickerByDateName(name).count()-2)
+				.findFirst()
+				.orElseThrow(() -> new TickerNotFoundException());
+		double change = Math.round((lastTicker.getPriceClose() - penultimateTicker.getPriceClose())*100.0)/100.0;
+		double changePersent = Math.round(((lastTicker.getPriceClose() - penultimateTicker.getPriceClose())/lastTicker.getPriceClose()*100)*100.0)/100.0;
+		return new LastPriceDto(lastTickerDto, change, changePersent);
+	}
+	
+	
+	
 }

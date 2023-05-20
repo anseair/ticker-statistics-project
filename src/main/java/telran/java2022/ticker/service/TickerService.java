@@ -4,7 +4,9 @@ import java.util.List;
 
 import telran.java2022.ticker.dto.DateBetweenDto;
 import telran.java2022.ticker.dto.FullStatDto;
+import telran.java2022.ticker.dto.LastPriceDto;
 import telran.java2022.ticker.dto.TickerDto;
+import telran.java2022.ticker.dto.TickersMinMaxDto;
 import telran.java2022.ticker.model.TickerId;
 
 public interface TickerService {
@@ -17,11 +19,7 @@ public interface TickerService {
 	int deleteAllTickersByName(String name);
 
 	TickerDto  update(TickerId date, double priceClose);
-
-	TickerDto findMaxPriceByDatePeriod(DateBetweenDto dateBetweenDto, String name);
 	
-	TickerDto findMinPriceByDatePeriod(DateBetweenDto dateBetweenDto, String name);
-
 	FullStatDto statistic(String name, long periodDays, double sum, long depositPeriodDays);
 	
 	FullStatDto statistic(String name, DateBetweenDto dateBetweenDto, double sum, long depositPeriodDays);
@@ -37,4 +35,10 @@ public interface TickerService {
 	List<String> findAllNames();
 	
 	int updateAllTickers();
+	
+	List<TickerDto> findAllPricesByPeriod(DateBetweenDto dateBetweenDto, String name);
+	
+	TickersMinMaxDto findMinMaxPricesByDatePeriod(DateBetweenDto dateBetweenDto, String name);
+
+	LastPriceDto findLastPrice(String name);
 }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TickerDto {
 
-	private TickerDateDto date;
-	private double priceClose;
+	TickerDateDto date;
+	double priceClose;
+	
 }

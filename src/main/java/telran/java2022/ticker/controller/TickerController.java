@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import telran.java2022.ticker.dto.FullStatDto;
+import telran.java2022.ticker.dto.LastPriceDto;
 import telran.java2022.ticker.dto.NamesAndDatesDto;
 import telran.java2022.ticker.dto.NamesAndDatesForStatDto;
 import telran.java2022.ticker.dto.TickerDto;
+import telran.java2022.ticker.dto.TickersMinMaxDto;
 import telran.java2022.ticker.model.TickerId;
 import telran.java2022.ticker.service.TickerService;
 
@@ -65,15 +67,9 @@ public class TickerController {
 	}
 	
 	@CrossOrigin
-	@PostMapping("/max")
-	public TickerDto findMaxPriceByDatePeriod(@RequestBody NamesAndDatesDto namesAndDatesDto) {
-		return service.findMaxPriceByDatePeriod(namesAndDatesDto.getDateBetween(), namesAndDatesDto.getNames()[0]);
-	}
-	
-	@CrossOrigin
-	@PostMapping("/min")
-	public TickerDto findMinPriceByDatePeriod(@RequestBody NamesAndDatesDto namesAndDatesDto) {
-		return service.findMinPriceByDatePeriod(namesAndDatesDto.getDateBetween(), namesAndDatesDto.getNames()[0]);
+	@PostMapping("/minMax")
+	public TickersMinMaxDto findMinPriceByDatePeriod(@RequestBody NamesAndDatesDto namesAndDatesDto) {
+		return service.findMinMaxPricesByDatePeriod(namesAndDatesDto.getDateBetween(), namesAndDatesDto.getNames()[0]);
 	}
 	
 	@CrossOrigin
@@ -112,7 +108,7 @@ public class TickerController {
 				namesAndDatesForStatDto.getDepositPeriodDays());
 	}
 	
-//	@CrossOrigin
+	@CrossOrigin
 	@PostMapping("/download")
 	public int downloadDataByTickerName(@RequestBody NamesAndDatesDto namesAndDatesDto) {
 		return service.downloadDataByTickerName(namesAndDatesDto.getNames(), namesAndDatesDto.getDateBetween());
@@ -130,4 +126,15 @@ public class TickerController {
 		return service.updateAllTickers();
 	}
 	
+	@CrossOrigin
+	@PostMapping("/period")
+	public List<TickerDto> findAllPricesByPeriod(@RequestBody NamesAndDatesDto namesAndDatesDto){
+		return service.findAllPricesByPeriod(namesAndDatesDto.getDateBetween(), namesAndDatesDto.getNames()[0]);
+	}
+	
+	@CrossOrigin
+	@GetMapping("/ticker/{name}")
+	public LastPriceDto findLastPrice(@PathVariable String name) {
+		return service.findLastPrice(name);
+	}
 }
