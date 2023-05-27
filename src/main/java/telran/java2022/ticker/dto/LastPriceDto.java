@@ -10,7 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LastPriceDto {
-	private TickerDto lastTicker;
+	TickerDateDto date;
+	double priceClose;
 	double change;
 	double changePersent;
 }

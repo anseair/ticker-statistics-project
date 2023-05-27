@@ -12,6 +12,8 @@ public interface TickerRepository extends CrudRepository<Ticker, TickerId>{
 
 	Stream<Ticker> findQueryByDateNameAndDateDateBetweenOrderByDateDate(String name, LocalDate dateFrom, LocalDate dateTo);
 		
+	Stream<Ticker> findTop2ByDateNameOrderByDateDateDesc(String name);
+	
 	int deleteAllTickersByDateName(String name);
 		
 	Stream<Ticker> findByDateDateOrderByDateName(LocalDate date);

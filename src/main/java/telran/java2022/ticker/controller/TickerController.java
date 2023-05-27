@@ -67,12 +67,6 @@ public class TickerController {
 	}
 	
 	@CrossOrigin
-	@PostMapping("/minMax")
-	public TickersMinMaxDto findMinPriceByDatePeriod(@RequestBody NamesAndDatesDto namesAndDatesDto) {
-		return service.findMinMaxPricesByDatePeriod(namesAndDatesDto.getDateBetween(), namesAndDatesDto.getNames()[0]);
-	}
-	
-	@CrossOrigin
 	@GetMapping("/statistic/{name}/{periodDays}/{sum}/{depositPeriodDays}")
 	public FullStatDto getStatistic(@PathVariable String name, @PathVariable long periodDays, @PathVariable double sum, @PathVariable long depositPeriodDays) {
 		return service.statistic(name, periodDays, sum, depositPeriodDays);
@@ -130,6 +124,12 @@ public class TickerController {
 	@PostMapping("/period")
 	public List<TickerDto> findAllPricesByPeriod(@RequestBody NamesAndDatesDto namesAndDatesDto){
 		return service.findAllPricesByPeriod(namesAndDatesDto.getDateBetween(), namesAndDatesDto.getNames()[0]);
+	}
+	
+	@CrossOrigin
+	@PostMapping("/minMax")
+	public TickersMinMaxDto findMinPriceByDatePeriod(@RequestBody NamesAndDatesDto namesAndDatesDto) {
+		return service.findMinMaxPricesByDatePeriod(namesAndDatesDto.getDateBetween(), namesAndDatesDto.getNames());
 	}
 	
 	@CrossOrigin

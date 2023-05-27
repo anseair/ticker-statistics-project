@@ -38,7 +38,7 @@ public interface TickerService {
 	
 	List<TickerDto> findAllPricesByPeriod(DateBetweenDto dateBetweenDto, String name);
 	
-	TickersMinMaxDto findMinMaxPricesByDatePeriod(DateBetweenDto dateBetweenDto, String name);
+	TickersMinMaxDto findMinMaxPricesByDatePeriod(DateBetweenDto dateBetweenDto, String[] names);
 
 	LastPriceDto findLastPrice(String name);
 }
