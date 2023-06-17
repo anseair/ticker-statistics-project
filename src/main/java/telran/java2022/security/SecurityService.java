@@ -21,13 +21,13 @@ public class SecurityService {
 		httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		httpSecurity.authorizeRequests(authorize -> authorize
 					.mvcMatchers("/account/register/**", "/financials/ticker/*/*/**", "/financials/ticker/**", "/financials/tickers/**", 
-							"/financials/minMax/**", "/financials/period/**", "/financials/correlation/**", 
+							"/financials/minMax/**", "/financials/period/**", "/financials/correlation/**", "/financials/lastPrices/**",
 							"/financials/statistic/**", "/financials/statistic/investmentPortfolio/**").permitAll()
 					.mvcMatchers("/account/user/*/role/*/**", "/financials/download/**", "/financials/add/ticker/**", "/financials/update/all").hasRole("ADMINISTRATOR")
-					.mvcMatchers(HttpMethod.DELETE, "/financials/**").hasRole("ADMINISTRATOR")
-					.mvcMatchers(HttpMethod.PUT, "/financials/**").hasRole("ADMINISTRATOR")
+					.mvcMatchers(HttpMethod.DELETE, "/financials/**").hasRole("administrator")
+					.mvcMatchers(HttpMethod.PUT, "/financials/**").hasRole("administrator")
 					.mvcMatchers(HttpMethod.PUT, "/account/user/{login}*").access("#login == authentication.name")
-					.mvcMatchers(HttpMethod.DELETE, "/account/user/{login}*").access("#login == authentication.name or hasRole('ADMINISTRATOR')")
+					.mvcMatchers(HttpMethod.DELETE, "/account/user/{login}*").access("#login == authentication.name or #email == authentication.name or hasRole('administrator')")
 					.mvcMatchers(HttpMethod.PUT, "/account/changePassword/user/{login}*").access("#login == authentication.name")
 					.anyRequest().authenticated());
 		return httpSecurity.build();

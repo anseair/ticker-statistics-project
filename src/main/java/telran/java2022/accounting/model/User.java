@@ -12,10 +12,11 @@ import lombok.Setter;
 
 @Getter
 @Document(collection = "Users")
-@EqualsAndHashCode(of = "login")
+@EqualsAndHashCode(of = "user")
 public class User {
 	@Id
-	private String login;
+	@Setter
+	private UserId user; 
 	@Setter
 	private String password;
 	@Setter
@@ -26,23 +27,23 @@ public class User {
 	private Set<String> roles = new HashSet<>();
 	
 	public User() {
-		roles.add("USER");
+		roles.add("user");
 	}
 	
-	public User(String login, String password, String firstName, String lastName) {
+	public User(UserId user, String password, String firstName, String lastName) {
 		this();
-		this.login = login;
+		this.user = user;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
 
 	public boolean addRole(String role) {
-		return roles.add(role.toUpperCase());
+		return roles.add(role);
 	}
 
 	public boolean removeRole(String role) {
-		return roles.remove(role.toUpperCase());
+		return roles.remove(role);
 	}
 
 }

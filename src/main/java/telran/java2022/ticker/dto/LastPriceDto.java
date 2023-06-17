@@ -14,4 +14,6 @@ public class LastPriceDto {
 	double priceClose;
 	double change;
 	double changePersent;
+	double minPrice;
+	double maxPrice;
 }

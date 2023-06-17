@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class RolesChangeDto {
-		String login;
+		UserIdDto user;
 		Set<String> roles;
 	
 }

@@ -15,6 +15,7 @@ public class StaticProjectApplication implements CommandLineRunner{
 	@Autowired
 	TickerRepository repository;
 	
+	@Autowired
 	UserRepository userRepository;
 	
 	PasswordEncoder encoder;

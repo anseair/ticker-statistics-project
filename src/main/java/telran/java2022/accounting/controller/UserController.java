@@ -38,7 +38,7 @@ public class UserController {
 	}
 	
 	@CrossOrigin
-	@DeleteMapping("/user/{login}")
+	@DeleteMapping("/delete/{login}")
 	public UserDto deleteUser(@PathVariable String login) {
 		return service.deleteUser(login);
 	}

@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class UserDto {
-	String login;
+	UserIdDto user;
 	String firstName;
 	String lastName;
 	Set<String> roles;

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import telran.java2022.accounting.dao.UserRepository;
+import telran.java2022.accounting.exceptions.UserNotFoundException;
 import telran.java2022.accounting.model.User;
 
 @Service
@@ -18,7 +19,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = repository.findById(username).orElseThrow(() -> new UsernameNotFoundException(username));
+//		User user = repository.findByUserEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
+		User user = null;
+		if (repository.existsByUserLogin(username)) {
+			user = repository.findByUserLogin(username).orElseThrow(() -> new UserNotFoundException());
+		} else if (repository.existsByUserEmail(username)) {
+				user = repository.findByUserEmail(username).orElseThrow(() -> new UserNotFoundException());
+		} else {
+			throw new UserNotFoundException();
+		}
 		String[] roles = user.getRoles().stream()
 						.map(r -> "ROLE_" + r.toUpperCase())
 						.toArray(String[]::new);

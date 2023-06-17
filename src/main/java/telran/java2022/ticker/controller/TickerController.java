@@ -129,12 +129,12 @@ public class TickerController {
 	@CrossOrigin
 	@PostMapping("/minMax")
 	public TickersMinMaxDto findMinPriceByDatePeriod(@RequestBody NamesAndDatesDto namesAndDatesDto) {
-		return service.findMinMaxPricesByDatePeriod(namesAndDatesDto.getDateBetween(), namesAndDatesDto.getNames());
+		return service.findMinMaxPricesByDatePeriod(namesAndDatesDto.getDateBetween(), namesAndDatesDto.getNames()[0]);
 	}
 	
 	@CrossOrigin
-	@GetMapping("/ticker/{name}")
-	public LastPriceDto findLastPrice(@PathVariable String name) {
-		return service.findLastPrice(name);
+	@GetMapping("/lastPrices")
+	public List<LastPriceDto> findLastPrice() {
+		return service.findLastPrice();
 	}
 }

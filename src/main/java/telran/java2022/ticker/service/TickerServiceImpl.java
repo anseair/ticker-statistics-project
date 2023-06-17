@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -393,10 +394,13 @@ public class TickerServiceImpl implements TickerService {
 	}
 	
 	@Override
-	public TickersMinMaxDto findMinMaxPricesByDatePeriod(DateBetweenDto dateBetweenDto, String[] names) {
-		Ticker tickerMin = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(names[0], dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+	public TickersMinMaxDto findMinMaxPricesByDatePeriod(DateBetweenDto dateBetweenDto, String name) {
+//		List<Ticker> tickers = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(names[0], dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+//				.collect(Collectors.toList());
+//		System.out.println(tickers);
+		Ticker tickerMin = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
 					.min((s1, s2) -> Double.compare(s1.getPriceClose(), s2.getPriceClose())).orElse(null);
-		Ticker tickerMax = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(names[0], dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+		Ticker tickerMax = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
 					.max((s1, s2) -> Double.compare(s1.getPriceClose(), s2.getPriceClose())).orElse(null);
 		TickerDto tickerMinDto = modelMapper.map(tickerMin, TickerDto.class);
 		TickerDto tickerMaxDto = modelMapper.map(tickerMax, TickerDto.class);
@@ -404,7 +408,14 @@ public class TickerServiceImpl implements TickerService {
 	}
 
 	@Override
-	public LastPriceDto findLastPrice(String name) {
+	public List<LastPriceDto> findLastPrice() {
+		List<LastPriceDto> res = new ArrayList<>();
+		List<String> names = findAllNames();
+		names.forEach(n -> res.add(createTodayInfo(n)));
+		return res;
+	}
+
+	private LastPriceDto createTodayInfo(String name) {
 		Ticker lastTicker = repository.findTop2ByDateNameOrderByDateDateDesc(name).findFirst().orElseThrow(() -> new TickerNotFoundException());
 		TickerDto lastTickerDto = modelMapper.map(lastTicker, TickerDto.class);
 		Ticker penultimateTicker = repository.findTop2ByDateNameOrderByDateDateDesc(name)
@@ -413,9 +424,14 @@ public class TickerServiceImpl implements TickerService {
 				.orElseThrow(() -> new TickerNotFoundException());
 		double change = lastTicker.getPriceClose() - penultimateTicker.getPriceClose();
 		double changePersent = (lastTicker.getPriceClose() - penultimateTicker.getPriceClose())/lastTicker.getPriceClose()*100;
-		return new LastPriceDto(lastTickerDto.getDate(), lastTicker.getPriceClose(), change, changePersent);
+		LocalDate dateTo = lastTicker.getDate().getDate();
+		LocalDate dateFrom = dateTo.minusWeeks(52);
+		DateBetweenDto dateBetween = new DateBetweenDto(dateFrom, dateTo);
+		double minPrice = findMinMaxPricesByDatePeriod(dateBetween, name).getMin().getPriceClose();
+		double maxPrice = findMinMaxPricesByDatePeriod(dateBetween, name).getMax().getPriceClose();
+		LastPriceDto res = new LastPriceDto(lastTickerDto.getDate(), lastTicker.getPriceClose(), change, changePersent, minPrice, maxPrice);
+		return res;
 	}
-	
 	
 	
 }
