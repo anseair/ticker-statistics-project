@@ -25,6 +25,8 @@ public class User {
 	private String lastName;
 	@Setter
 	private Set<String> roles = new HashSet<>();
+	@Setter
+	private String resetPasswordToken; 
 	
 	public User() {
 		roles.add("user");

@@ -10,6 +10,7 @@ import telran.java2022.accounting.model.UserId;
 public interface UserRepository extends CrudRepository<User, UserId>{
 	Optional<User> findByUserEmail(String email);
 	Optional<User> findByUserLogin(String login);
+	Optional<User> findByResetPasswordToken(String token);
 
 	boolean existsByUserEmail(String email);
 	boolean existsByUserLogin(String login);
