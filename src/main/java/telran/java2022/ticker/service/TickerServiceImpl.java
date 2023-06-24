@@ -1,20 +1,20 @@
 package telran.java2022.ticker.service;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
 import telran.java2022.ticker.exceptions.TickerExistException;
@@ -25,14 +25,12 @@ import telran.java2022.ticker.dto.FullStatDto;
 import telran.java2022.ticker.dto.LastPriceDto;
 import telran.java2022.ticker.dto.MaxStatDto;
 import telran.java2022.ticker.dto.MinStatDto;
+import telran.java2022.ticker.dto.ResponseTickerDto;
+import telran.java2022.ticker.dto.Ticker2;
 import telran.java2022.ticker.dto.TickerDto;
 import telran.java2022.ticker.dto.TickersMinMaxDto;
 import telran.java2022.ticker.model.Ticker;
 import telran.java2022.ticker.model.TickerId;
-import yahoofinance.Stock;
-import yahoofinance.YahooFinance;
-import yahoofinance.histquotes.HistoricalQuote;
-import yahoofinance.histquotes.Interval;
 
 @RequiredArgsConstructor
 @Service
@@ -176,122 +174,6 @@ public class TickerServiceImpl implements TickerService {
 			return statistic(name, dateBetweenDto, sum, depositPeriodDays);
 	}
 	
-	/**
-	 * Correlation with LocalDate from - to
-	 */
-	@Override
-	public String correlation(String name1, String name2,  DateBetweenDto dateBetweenDto) {
-		double[] tickersFirst = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name1, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
-				.map(t->t.getPriceClose())
-				.mapToDouble(Double::doubleValue)
-				.toArray();
-		double[] tickersSecond = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name2, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
-				.map(t->t.getPriceClose())
-				.mapToDouble(Double::doubleValue)
-				.toArray();
-		double correlation = new PearsonsCorrelation().correlation(tickersFirst,tickersSecond);		
-		String result = resultCorrelation(correlation);
-		return correlation + ": " + result;
-	}
-	
-	/**
-	 * Correlation with days
-	 */
-	@Override
-	public String correlation(String name1, String name2, int termDays) {
-		DateBetweenDto dateBetweenDto = new DateBetweenDto(LocalDate.now().minusDays(termDays), LocalDate.now());
-		return correlation(name1, name2, dateBetweenDto);
-	}
-	
-	private String resultCorrelation(double correlation) {		
-		String res = "";
-		if (correlation <= 1.00 && correlation > 0.90) {
-			res = "very strong correlation";
-		} else if (correlation <= 0.90 && correlation > 0.70) {
-			res = "strong correlation";
-		} else if (correlation <= 0.70 && correlation > 0.50) {
-			res = "moderate correlation";
-		} else if (correlation <= 0.50 && correlation > 0.30) {
-			res = "weak correlation";
-		} else if (correlation <= 0.30 && correlation > 0.00) {
-			res = "negligible correlation";
-		} else if (correlation >= -1.00 && correlation < -0.90) {
-			res = "inverse very strong correlation";
-		} else if (correlation >= -0.90 && correlation < -0.70) {
-			res = "inverse strong correlation";
-		} else if (correlation >= -0.70 && correlation < -0.50) {
-			res = "inverse moderate correlation";
-		} else if (correlation >= -0.50 && correlation < -0.30) {
-			res = "inverse weak correlation";
-		} else if (correlation >= -0.30 && correlation < 0.00) {
-			res = "inverse negligible correlation";
-		}
-		return res; 
-	}
-	
-	/**
-	 * Downloading new data by name and date between
-	 */
-	@Override
-	public int downloadDataByTickerName(String[] names, DateBetweenDto dateBetweenDto) {
-		List<HistoricalQuote> googleHistQuotes = requestData(names[0], dateBetweenDto);
-		List<Ticker> requesTickers = new ArrayList<>();
-		googleHistQuotes.stream()
-			.forEach(e -> {
-				LocalDate date = e.getDate().toInstant().atZone(TimeZone.getDefault().toZoneId()).toLocalDate();
-				if (e.getClose() != null) {
-					double price = e.getClose().doubleValue();
-					Ticker ticker = new Ticker(new TickerId(names[0], date), price);
-					requesTickers.add(ticker);
-
-				}				
-			});
-		
-//		requesTickers.forEach(t -> System.out.println(t));
-//		System.out.println("==================");
-		
-		List<Ticker> baseTickers = repository
-				.findQueryByDateNameAndDateDateBetweenOrderByDateDate(names[0], dateBetweenDto.getDateFrom().minusDays(1), dateBetweenDto.getDateTo())
-				.collect(Collectors.toList());
-		
-//		baseTickers.forEach(t -> System.out.println(t));
-//		System.out.println("====================");
-		
-		List<Ticker> newData = requesTickers.stream()
-				.filter(ticker -> !baseTickers.stream().anyMatch(ticker::equals))
-				.collect(Collectors.toList());
-		
-//		newData.forEach(t->System.out.println(t));
-		
-		repository.saveAll(newData);
-		return newData.size();
-	}
-
-	private List<HistoricalQuote> requestData(String name, DateBetweenDto dateBetweenDto) {
-		Calendar from = GregorianCalendar.from(ZonedDateTime.of(dateBetweenDto.getDateFrom().atTime(0, 0), ZoneId.systemDefault()));
-		Calendar to = GregorianCalendar.from(ZonedDateTime.of(dateBetweenDto.getDateTo().atTime(0,0), ZoneId.systemDefault()));
-//		from.add(Calendar.DATE, 1); 
-		
-//		System.out.println(from);
-//		System.out.println(to);
-		
-		Stock tickerRequest = null;
-		try {
-			tickerRequest = YahooFinance.get(name);
-			System.out.println(tickerRequest);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		List<HistoricalQuote> googleHistQuotes = new ArrayList<>();
-		try {
-			googleHistQuotes = tickerRequest.getHistory(from, to, Interval.DAILY);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-//		googleHistQuotes.forEach(t-> System.out.println(t));
-		return googleHistQuotes;
-	}
-
 	@Override
 	public FullStatDto investmentPortfolio(String[] names, DateBetweenDto dateBetweenDto, double sum, long depositPeriodDays) {
 		List<Double> allStats = new ArrayList<>();
@@ -363,16 +245,108 @@ public class TickerServiceImpl implements TickerService {
 		return res;
 	}
 	
+	/**
+	 * Correlation with LocalDate from - to
+	 */
+	@Override
+	public String correlation(String name1, String name2,  DateBetweenDto dateBetweenDto) {
+		double[] tickersFirst = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name1, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+				.map(t->t.getPriceClose())
+				.mapToDouble(Double::doubleValue)
+				.toArray();
+		double[] tickersSecond = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name2, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+				.map(t->t.getPriceClose())
+				.mapToDouble(Double::doubleValue)
+				.toArray();
+		double correlation = new PearsonsCorrelation().correlation(tickersFirst,tickersSecond);		
+		String result = resultCorrelation(correlation);
+		return correlation + ": " + result;
+	}
+	
+	/**
+	 * Correlation with days
+	 */
+	@Override
+	public String correlation(String name1, String name2, int termDays) {
+		DateBetweenDto dateBetweenDto = new DateBetweenDto(LocalDate.now().minusDays(termDays), LocalDate.now());
+		return correlation(name1, name2, dateBetweenDto);
+	}
+	
+	private String resultCorrelation(double correlation) {		
+		String res = "";
+		if (correlation <= 1.00 && correlation > 0.90) {
+			res = "very strong correlation";
+		} else if (correlation <= 0.90 && correlation > 0.70) {
+			res = "strong correlation";
+		} else if (correlation <= 0.70 && correlation > 0.50) {
+			res = "moderate correlation";
+		} else if (correlation <= 0.50 && correlation > 0.30) {
+			res = "weak correlation";
+		} else if (correlation <= 0.30 && correlation > 0.00) {
+			res = "negligible correlation";
+		} else if (correlation >= -1.00 && correlation < -0.90) {
+			res = "inverse very strong correlation";
+		} else if (correlation >= -0.90 && correlation < -0.70) {
+			res = "inverse strong correlation";
+		} else if (correlation >= -0.70 && correlation < -0.50) {
+			res = "inverse moderate correlation";
+		} else if (correlation >= -0.50 && correlation < -0.30) {
+			res = "inverse weak correlation";
+		} else if (correlation >= -0.30 && correlation < 0.00) {
+			res = "inverse negligible correlation";
+		}
+		return res; 
+	}
+	
 	@Override
 	public 	List<String> findAllNames(){
-//		List<String> names =  repository.findAllByOrderByDateName().map(t -> t.getDate().getName()).distinct().collect(Collectors.toList());
-//		return names;
-		LocalDate date = LocalDate.of(2020, 1, 7);
+		LocalDate date = LocalDate.of(2023, 6, 23);
 		return repository.findByDateDateOrderByDateName(date)
 				.map(t->t.getDate().getName())
 				.collect(Collectors.toList());
 	};
 
+	
+	/**
+	 * Downloading new data by tiingo.com
+	 */
+	@Override
+	public int downloadDataByTickerName(String[] names, DateBetweenDto dateBetweenDto) {
+		String TOKEN = "Token 4789f04c9f54ae2ce69af8db744bb7fc4883de69";
+		String baseUrl = "https://api.tiingo.com/tiingo/daily";
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.AUTHORIZATION, TOKEN);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/"+names[0]).path("/"+"prices")
+																.queryParam("startDate", dateBetweenDto.getDateFrom())
+																.queryParam("endDate", dateBetweenDto.getDateTo());
+		RestTemplate restTemplate = new RestTemplate();
+		RequestEntity<String> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, builder.build().toUri());
+		ResponseTickerDto responseEntity = restTemplate.exchange(requestEntity, ResponseTickerDto.class).getBody();
+		List<Ticker2> tickers2 = responseEntity.getTickers();
+		
+		List<Ticker> requestTickers = new ArrayList<>();
+		tickers2.stream()
+			.forEach(t -> {
+				LocalDate date = t.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				if (t.getClose() != 0) {
+					double price = t.getClose();
+					Ticker ticker = new Ticker(new TickerId(names[0], date), price);
+					requestTickers.add(ticker);
+				}				
+			});
+		
+		List<Ticker> baseTickers = repository
+				.findQueryByDateNameAndDateDateBetweenOrderByDateDate(names[0], dateBetweenDto.getDateFrom().minusDays(1), dateBetweenDto.getDateTo())
+				.collect(Collectors.toList());
+		
+		List<Ticker> newData = requestTickers.stream()
+				.filter(ticker -> !baseTickers.stream().anyMatch(ticker::equals))
+				.collect(Collectors.toList());
+		repository.saveAll(newData);
+		return newData.size();	
+	}
+	
 	@Override
 	public int updateAllTickers() {
 		List<String> names = findAllNames();
@@ -395,9 +369,6 @@ public class TickerServiceImpl implements TickerService {
 	
 	@Override
 	public TickersMinMaxDto findMinMaxPricesByDatePeriod(DateBetweenDto dateBetweenDto, String name) {
-//		List<Ticker> tickers = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(names[0], dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
-//				.collect(Collectors.toList());
-//		System.out.println(tickers);
 		Ticker tickerMin = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
 					.min((s1, s2) -> Double.compare(s1.getPriceClose(), s2.getPriceClose())).orElse(null);
 		Ticker tickerMax = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
@@ -416,19 +387,17 @@ public class TickerServiceImpl implements TickerService {
 	}
 
 	private LastPriceDto createTodayInfo(String name) {
-		Ticker lastTicker = repository.findTop2ByDateNameOrderByDateDateDesc(name).findFirst().orElseThrow(() -> new TickerNotFoundException());
-		TickerDto lastTickerDto = modelMapper.map(lastTicker, TickerDto.class);
-		Ticker penultimateTicker = repository.findTop2ByDateNameOrderByDateDateDesc(name)
-				.skip(1)
-				.findFirst()
-				.orElseThrow(() -> new TickerNotFoundException());
-		double change = lastTicker.getPriceClose() - penultimateTicker.getPriceClose();
-		double changePersent = (lastTicker.getPriceClose() - penultimateTicker.getPriceClose())/lastTicker.getPriceClose()*100;
+		List<Ticker> tickers = repository.findTop2ByDateNameOrderByDateDateDesc(name).collect(Collectors.toList());
+		Ticker lastTicker = tickers.get(tickers.size()-1);
+		Ticker prevLastTicker = tickers.get(tickers.size()-2);
+		double change = lastTicker.getPriceClose() - prevLastTicker.getPriceClose();
+		double changePersent = (lastTicker.getPriceClose() - prevLastTicker.getPriceClose())/lastTicker.getPriceClose()*100;
 		LocalDate dateTo = lastTicker.getDate().getDate();
 		LocalDate dateFrom = dateTo.minusWeeks(52);
 		DateBetweenDto dateBetween = new DateBetweenDto(dateFrom, dateTo);
 		double minPrice = findMinMaxPricesByDatePeriod(dateBetween, name).getMin().getPriceClose();
 		double maxPrice = findMinMaxPricesByDatePeriod(dateBetween, name).getMax().getPriceClose();
+		TickerDto lastTickerDto = modelMapper.map(lastTicker, TickerDto.class);
 		LastPriceDto res = new LastPriceDto(lastTickerDto.getDate(), lastTicker.getPriceClose(), change, changePersent, minPrice, maxPrice);
 		return res;
 	}

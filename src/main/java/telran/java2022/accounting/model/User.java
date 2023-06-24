@@ -29,7 +29,7 @@ public class User {
 	private String resetPasswordToken; 
 	
 	public User() {
-		roles.add("user");
+		roles.add("USER");
 	}
 	
 	public User(UserId user, String password, String firstName, String lastName) {

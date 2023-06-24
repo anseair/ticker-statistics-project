@@ -23,9 +23,7 @@ public interface UserService {
 	
 	void changePassword(String login, String newPassword);
 	
-	void updateResetPasswordToken(String token, String email);
+	void updateResetPasswordToken(String email, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException;
 	
 	User get(String resetPasswordToken);
-
-	void sendMail(String email, String resetPasswordLink) throws UnsupportedEncodingException, MessagingException;
 }

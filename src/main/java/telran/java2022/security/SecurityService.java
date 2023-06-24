@@ -20,15 +20,12 @@ public class SecurityService {
 		httpSecurity.cors();
 		httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		httpSecurity.authorizeRequests(authorize -> authorize
-					.mvcMatchers("/account/register/**", "/financials/ticker/*/*/**", "/financials/tickers/**", "/account/resetPassword/**").permitAll()
-					.mvcMatchers("/financials/download/**", "/financials/add/ticker/**", "/financials/update/all").hasRole("administrator")
-					.mvcMatchers(HttpMethod.DELETE, "/financials/**").hasRole("administrator")
-					.mvcMatchers(HttpMethod.PUT, "/financials/**").hasRole("administrator")
-					.mvcMatchers(HttpMethod.DELETE, "/account/changeRole/**").hasRole("administrator")
-					.mvcMatchers(HttpMethod.PUT, "/account/changeRole/**").hasRole("administrator")
-
+					.mvcMatchers("/financials/ticker/*/*/**", "/financials/tickers/**", "/financials/lastPrices/**", "/account/register/**", "/account/resetPassword/**").permitAll()
+					.mvcMatchers("/financials/download/**", "/financials/add/ticker/**", "/financials/update/all/**", "/account/changeRole/**").hasRole("ADMINISTRATOR")
+					.mvcMatchers(HttpMethod.DELETE, "/financials/**").hasRole("ADMINISTRATOR")
+					.mvcMatchers(HttpMethod.PUT, "/financials/**").hasRole("ADMINISTRATOR")
 					.mvcMatchers(HttpMethod.PUT, "/account/user/{login}/***").access("#login == authentication.name")
-					.mvcMatchers(HttpMethod.DELETE, "/account/delete/{login}/**").access("#login == authentication.name or hasRole('administrator')")
+					.mvcMatchers(HttpMethod.DELETE, "/account/delete/{login}/**").access("#login == authentication.name or hasRole('ADMINISTRATOR')")
 					.mvcMatchers(HttpMethod.PUT, "/account/changePassword/user/{login}/**").access("#login == authentication.name")
 					.anyRequest().authenticated());
 		return httpSecurity.build();

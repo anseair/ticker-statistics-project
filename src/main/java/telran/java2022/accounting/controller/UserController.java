@@ -4,22 +4,11 @@ import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.naming.factory.SendMailFactory;
-import org.modelmapper.internal.bytebuddy.utility.RandomString;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import telran.java2022.accounting.dto.UserDto;
 import telran.java2022.accounting.dto.UserRegisterDto;
 import telran.java2022.accounting.dto.UserUpdateDto;
-import telran.java2022.accounting.model.User;
 import telran.java2022.accounting.service.UserService;
 
 @RequiredArgsConstructor
@@ -43,19 +31,6 @@ import telran.java2022.accounting.service.UserService;
 public class UserController {
 	
 	final UserService service;
-//    final MailSender mailSender;
-    final JavaMailSender mailSender;
-    
-//    private SimpleMailMessage mailMessage;
-//    
-//    public void setMailSender(MailSender mailSender) {
-//        this.mailSender = mailSender;
-//    }
-//
-//    public void setMailMessage(SimpleMailMessage mailMessage) {
-//        this.mailMessage = mailMessage;
-//    }
- 
     
 	@CrossOrigin
 	@PostMapping("/register")
@@ -84,14 +59,12 @@ public class UserController {
 	@CrossOrigin
 	@PutMapping("/changeRole/{login}/role/{role}")
 	public UserDto addRole(@PathVariable String login, @PathVariable String role) {
-		System.out.println(login);
 		return service.changeRoles(login, role, true);
 	}
 	
 	@CrossOrigin
 	@DeleteMapping("/changeRole/{login}/role/{role}")
 	public UserDto deleteRole(@PathVariable String login, @PathVariable String role) {
-		System.out.println(login);
 		return service.changeRoles(login, role, false);
 	}
 	
@@ -104,18 +77,11 @@ public class UserController {
 	@CrossOrigin
 	@PostMapping("/resetPassword")
 	public String processResetPasswordToken(@RequestParam String email, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
-		String token = RandomString.make(20);
-		service.updateResetPasswordToken(token, email);
-		String resetPasswordLink = getSiteURL(request) + "/resetPassword/?=token" + token;
-		service.sendMail(email, resetPasswordLink);
+		service.updateResetPasswordToken(email, request);
 		return "forgot_password_form";
 	}
-	
-	private static String getSiteURL(HttpServletRequest request) {
-		String siteURL = request.getRequestURL().toString();
-		return siteURL.replace(request.getServletPath(), "");
-	}
-	
+
+
 //	@CrossOrigin
 //	@PostMapping("/resetPassword/")
 //	public String processResetPassword(HttpServletRequest request) {
