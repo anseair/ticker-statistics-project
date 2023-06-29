@@ -1,20 +1,45 @@
 package telran.java2022.ticker.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.CookieStore;
+import java.net.HttpCookie;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.catalina.connector.Response;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.mongodb.internal.operation.SyncOperations;
 
 import lombok.RequiredArgsConstructor;
 import telran.java2022.ticker.exceptions.TickerExistException;
@@ -31,6 +56,11 @@ import telran.java2022.ticker.dto.TickerDto;
 import telran.java2022.ticker.dto.TickersMinMaxDto;
 import telran.java2022.ticker.model.Ticker;
 import telran.java2022.ticker.model.TickerId;
+import yahoofinance.Stock;
+import yahoofinance.Utils;
+import yahoofinance.YahooFinance;
+import yahoofinance.histquotes.HistoricalQuote;
+import yahoofinance.histquotes.Interval;
 
 @RequiredArgsConstructor
 @Service
@@ -56,16 +86,26 @@ public class TickerServiceImpl implements TickerService {
 	}
 	
 	@Override
-	public int deleteAllTickersByName(String name) {
-//		return repository.deleteAllTickersByDateName(name);
+	public boolean deleteAllTickersByName(String name) {
+		List<Ticker> tickers = repository.findAllTickersByDateName(name).collect(Collectors.toList());
+		System.out.println(tickers.size());
+		if (tickers.size() == 0) {
+			return false;
+		} 
+		repository.deleteAllTickersByDateName(name);
+		tickers = repository.findAllTickersByDateName(name).collect(Collectors.toList());
+		System.out.println(tickers.size());
+		return true;
 		
-		List<Ticker> ticker = repository.findTickerByDateName(name).collect(Collectors.toList());
-		System.out.println(ticker.size());
-		if (ticker.size() == 0) {
-			return 0;
-		}
-		repository.deleteAll(ticker);
-		return ticker.size();
+//		List<Ticker> tickers = repository.findAllTickersByDateName(name).collect(Collectors.toList());
+//		System.out.println(tickers.size());
+//		tickers.forEach(t -> System.out.println(t));
+//		if (tickers.size() == 0) {
+//			return 0;
+//		} else {
+//			repository.deleteAll(tickers);
+//		}
+//		return tickers.size();
 	}
 	
 	@Override
@@ -300,49 +340,99 @@ public class TickerServiceImpl implements TickerService {
 	
 	@Override
 	public 	List<String> findAllNames(){
-		LocalDate date = LocalDate.of(2023, 6, 23);
+		LocalDate date = LocalDate.of(2023, 6,28);
 		return repository.findByDateDateOrderByDateName(date)
 				.map(t->t.getDate().getName())
 				.collect(Collectors.toList());
 	};
 
-	
 	/**
-	 * Downloading new data by tiingo.com
+	 * Downloading new data by financialmodelingprep.com
 	 */
 	@Override
 	public int downloadDataByTickerName(String[] names, DateBetweenDto dateBetweenDto) {
-		String TOKEN = "Token 4789f04c9f54ae2ce69af8db744bb7fc4883de69";
-		String baseUrl = "https://api.tiingo.com/tiingo/daily";
+		
+//		Calendar from = GregorianCalendar.from(ZonedDateTime.of(dateBetweenDto.getDateFrom().atTime(0, 0), ZoneId.systemDefault()));
+//		Calendar to = GregorianCalendar.from(ZonedDateTime.of(dateBetweenDto.getDateTo().atTime(0,0), ZoneId.systemDefault()));
+//	
+//		Stock tickerRequest = null;
+		
+//		try {
+//			tickerRequest = YahooFinance.get(names[0]);
+//			System.out.println(tickerRequest.getSymbol());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		List<HistoricalQuote> googleHistQuotes = new ArrayList<>();
+//		try {
+//			googleHistQuotes = tickerRequest.getHistory(from, to, Interval.DAILY);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		googleHistQuotes.forEach(t-> System.out.println(t));
+//		List<Ticker> requesTickers = new ArrayList<>();
+//		googleHistQuotes.stream()
+//			.forEach(e -> {
+//				LocalDate date = e.getDate().toInstant().atZone(TimeZone.getDefault().toZoneId()).toLocalDate();
+//				if (e.getClose() != null) {
+//					double price = e.getClose().doubleValue();
+//					Ticker ticker = new Ticker(new TickerId(names[0], date), price);
+//					requesTickers.add(ticker);
+//
+//				}				
+//			});
+//		
+//		requesTickers.forEach(t -> System.out.println(t));
+//		System.out.println("==================");		
+//		return 0;
+		
+		
+		String TOKEN = "d7fcbc6c1eee75524db81e0b62dd0c21";
+		String baseUrl = "https://financialmodelingprep.com/api/v3/historical-price-full";
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, TOKEN);
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/"+names[0]).path("/"+"prices")
-																.queryParam("startDate", dateBetweenDto.getDateFrom())
-																.queryParam("endDate", dateBetweenDto.getDateTo());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/"+names[0])
+																.queryParam("from", dateBetweenDto.getDateFrom())
+																.queryParam("to", dateBetweenDto.getDateTo().minusDays(1))
+																.queryParam("apikey", TOKEN);
+		
+//		System.out.println(builder.build().toUri());
 		RestTemplate restTemplate = new RestTemplate();
 		RequestEntity<String> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, builder.build().toUri());
-		ResponseTickerDto responseEntity = restTemplate.exchange(requestEntity, ResponseTickerDto.class).getBody();
-		List<Ticker2> tickers2 = responseEntity.getTickers();
-		
+		ResponseEntity<ResponseTickerDto> responseEntity = restTemplate.exchange(requestEntity, ResponseTickerDto.class);
+		List<Ticker2> tickers2 = responseEntity.getBody().getHistorical();
 		List<Ticker> requestTickers = new ArrayList<>();
 		tickers2.stream()
 			.forEach(t -> {
-				LocalDate date = t.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//				LocalDate date = t.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				if (t.getClose() != 0) {
-					double price = t.getClose();
-					Ticker ticker = new Ticker(new TickerId(names[0], date), price);
+					double price = Math.round(t.getClose() * 100.0)/100.0;
+					Ticker ticker = new Ticker(new TickerId(names[0], t.getDate()), price);
 					requestTickers.add(ticker);
 				}				
-			});
+			});		
+//		System.out.println("================");
+//		System.out.println(requestTickers.size());
+//		requestTickers.forEach(t -> System.out.println(t));
 		
 		List<Ticker> baseTickers = repository
 				.findQueryByDateNameAndDateDateBetweenOrderByDateDate(names[0], dateBetweenDto.getDateFrom().minusDays(1), dateBetweenDto.getDateTo())
 				.collect(Collectors.toList());
 		
+//		System.out.println("==============");
+//		System.out.println(baseTickers.size());
+//		baseTickers.forEach(t -> System.out.println(t));
+		
 		List<Ticker> newData = requestTickers.stream()
 				.filter(ticker -> !baseTickers.stream().anyMatch(ticker::equals))
 				.collect(Collectors.toList());
+		
+//		System.out.println("================");
+//		System.out.println(newData.size());
+//		newData.forEach(t -> System.out.println(t));
+//		System.out.println("================");
+
 		repository.saveAll(newData);
 		return newData.size();	
 	}
@@ -361,8 +451,9 @@ public class TickerServiceImpl implements TickerService {
 
 	@Override
 	public 	List<TickerDto> findAllPricesByPeriod(DateBetweenDto dateBetweenDto, String name){
-		List<Ticker> allPeriod = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, dateBetweenDto.getDateFrom(), dateBetweenDto.getDateTo())
+		List<Ticker> allPeriod = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, dateBetweenDto.getDateFrom().minusDays(1), dateBetweenDto.getDateTo())
 				.collect(Collectors.toList());
+//		System.out.println(allPeriod.size());
 		List<TickerDto> tickerDtos = allPeriod.stream().map(t -> modelMapper.map(t, TickerDto.class)).collect(Collectors.toList());
 		return tickerDtos;
 	}

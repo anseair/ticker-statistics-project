@@ -16,7 +16,7 @@ public interface TickerService {
 
 	TickerDto  deleteByDate(TickerId date);
 	
-	int deleteAllTickersByName(String name);
+	boolean deleteAllTickersByName(String name);
 
 	TickerDto  update(TickerId date, double priceClose);
 	

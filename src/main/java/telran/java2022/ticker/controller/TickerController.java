@@ -54,7 +54,7 @@ public class TickerController {
 	
 	@CrossOrigin
 	@DeleteMapping("/{name}")
-	public int deleteAllTickersByName(@PathVariable String name) {
+	public boolean deleteAllTickersByName(@PathVariable String name) {
 		return service.deleteAllTickersByName(name);
 	}
 	
