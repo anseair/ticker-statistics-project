@@ -1,7 +1,6 @@
 package telran.java2022.ticker.dao;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.springframework.data.repository.CrudRepository;
 
