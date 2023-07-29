@@ -22,5 +22,5 @@ public class Ticker {
 	@Id
 	private TickerId date;
 	private double priceClose;
-
+	
 }

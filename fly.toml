@@ -1,13 +1,13 @@
-# fly.toml file generated for ticker-statistic on 2023-04-28T23:56:46+03:00
+# fly.toml file generated for white-glitter-6887 on 2023-06-30T16:20:38+03:00
 
-app = "ticker-statistic"
+app = "white-glitter-6887"
 kill_signal = "SIGINT"
 kill_timeout = 5
-primary_region = "ams"
+primary_region = "otp"
 processes = []
 
 [build]
-  image = "anseair/ticker-statistic:latest"
+  image = "anseair/ticker-statistic:0.1.5"
 
 [env]
 

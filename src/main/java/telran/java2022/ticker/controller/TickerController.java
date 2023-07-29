@@ -19,6 +19,7 @@ import telran.java2022.ticker.dto.FullStatDto;
 import telran.java2022.ticker.dto.LastPriceDto;
 import telran.java2022.ticker.dto.NamesAndDatesDto;
 import telran.java2022.ticker.dto.NamesAndDatesForStatDto;
+import telran.java2022.ticker.dto.TickerDescriptionDto;
 import telran.java2022.ticker.dto.TickerDto;
 import telran.java2022.ticker.dto.TickersMinMaxDto;
 import telran.java2022.ticker.model.TickerId;
@@ -136,5 +137,17 @@ public class TickerController {
 	@GetMapping("/lastPrices")
 	public List<LastPriceDto> findLastPrice() {
 		return service.findLastPrice();
+	}
+	
+	@CrossOrigin
+	@GetMapping("/descriptions")
+	public List<TickerDescriptionDto> findDescriptions(){
+		return service.findDescriptions();
+	}
+	
+	@CrossOrigin
+	@PostMapping("/add/description/{name}")
+	public TickerDescriptionDto addDescription(@PathVariable String name) {
+		return service.addDescription(name);
 	}
 }

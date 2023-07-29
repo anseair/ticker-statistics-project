@@ -20,7 +20,7 @@ public class SecurityService {
 		httpSecurity.cors();
 		httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		httpSecurity.authorizeRequests(authorize -> authorize
-					.mvcMatchers("/financials/ticker/*/*/**", "/financials/tickers/**", "/financials/lastPrices/**", "/account/register/**", "/account/resetPassword/**").permitAll()
+					.mvcMatchers("/financials/ticker/*/*/**", "/financials/tickers/**", "/financials/lastPrices/**",  "/financials/descriptions/**", "/account/register/**", "/account/resetPassword/**").permitAll()
 					.mvcMatchers("/financials/download/**", "/financials/add/ticker/**", "/financials/update/all/**", "/account/changeRole/**").hasRole("ADMINISTRATOR")
 					.mvcMatchers(HttpMethod.DELETE, "/financials/**").hasRole("ADMINISTRATOR")
 					.mvcMatchers(HttpMethod.PUT, "/financials/**").hasRole("ADMINISTRATOR")
