@@ -14,8 +14,5 @@ public class TickerDescriptionDto {
 		String name;
 		String description;
 		LocalDate startDate;
-		LocalDate endDate;
 		String exchangeCode;
-	
-
 }

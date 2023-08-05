@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -460,23 +461,54 @@ public class TickerServiceImpl implements TickerService {
 	public List<LastPriceDto> findLastPrice() {
 		List<LastPriceDto> res = new ArrayList<>();
 		List<String> names = findAllNames();
+//		List<String> names = Arrays.asList("AAPL", "AMZN", "TSLA", "MSFT", "GOOG", "INTC", "SPY");
 		names.forEach(n -> res.add(createTodayInfo(n)));
 		return res;
 	}
 
 	private LastPriceDto createTodayInfo(String name) {
-		List<Ticker> tickers = repository.findTop2ByDateNameOrderByDateDateDesc(name).collect(Collectors.toList());
-		Ticker lastTicker = tickers.get(0);
-		Ticker prevLastTicker = tickers.get(1);
-		double change = Math.round((lastTicker.getPriceClose() - prevLastTicker.getPriceClose())*100.0)/100.0;
-		double changePersent = Math.round(((lastTicker.getPriceClose() - prevLastTicker.getPriceClose())/lastTicker.getPriceClose()*100) *100.0)/100.0;
-		LocalDate dateTo = lastTicker.getDate().getDate();
+		List<Ticker> tickers = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, LocalDate.now().minusDays(3), LocalDate.now()).collect(Collectors.toList());
+//		List<Ticker> tickers = repository.findTop2ByDateNameOrderByDateDateDesc(name).collect(Collectors.toList());
+//		Ticker lastTicker = tickers.get(0);
+//		Ticker prevLastTicker = tickers.get(1);
+		double change = Math.round((tickers.get(tickers.size()-1).getPriceClose()-tickers.get(0).getPriceClose())*100.0)/100.0;
+		double changePersent = Math.round(((tickers.get(tickers.size()-1).getPriceClose()-tickers.get(0).getPriceClose())/tickers.get(tickers.size()-1).getPriceClose()*100) *100.0)/100.0;
+		
+		List<Ticker> tickers5days = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, LocalDate.now().minusDays(6), LocalDate.now()).collect(Collectors.toList());
+		double change5Days = Math.round((tickers5days.get(tickers5days.size()-1).getPriceClose()-tickers5days.get(0).getPriceClose())*100.0)/100.0;
+		double changePersent5Days = Math.round(((tickers5days.get(tickers5days.size()-1).getPriceClose()-tickers5days.get(0).getPriceClose())/tickers5days.get(tickers5days.size()-1).getPriceClose()*100) *100.0)/100.0;
+
+		List<Ticker> tickersMonth = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, LocalDate.now().minusMonths(1), LocalDate.now()).collect(Collectors.toList());
+		double changeMonth = Math.round((tickersMonth.get(tickersMonth.size()-1).getPriceClose()-tickersMonth.get(0).getPriceClose())*100.0)/100.0;
+		double changePersentMonth = Math.round(((tickersMonth.get(tickersMonth.size()-1).getPriceClose()-tickersMonth.get(0).getPriceClose())/tickersMonth.get(tickersMonth.size()-1).getPriceClose()*100) *100.0)/100.0;
+
+		List<Ticker> tickers6Months = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, LocalDate.now().minusMonths(6), LocalDate.now()).collect(Collectors.toList());
+		double change6Months = Math.round((tickers6Months.get(tickers6Months.size()-1).getPriceClose()-tickers6Months.get(0).getPriceClose())*100.0)/100.0;
+		double changePersent6Months = Math.round(((tickers6Months.get(tickers6Months.size()-1).getPriceClose()-tickers6Months.get(0).getPriceClose())/tickers6Months.get(tickers6Months.size()-1).getPriceClose()*100) *100.0)/100.0;
+
+		List<Ticker> tickers1Year = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, LocalDate.now().minusYears(1), LocalDate.now()).collect(Collectors.toList());
+		double change1Year = Math.round((tickers1Year.get(0).getPriceClose() - tickers1Year.get(tickers1Year.size()-1).getPriceClose())*100.0)/100.0;
+		double changePersent1Year = Math.round(((tickers1Year.get(0).getPriceClose() - tickers1Year.get(tickers1Year.size()-1).getPriceClose())/tickers1Year.get(0).getPriceClose()*100) *100.0)/100.0;
+		
+		List<Ticker> tickers5Years = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, LocalDate.now().minusYears(5), LocalDate.now()).collect(Collectors.toList());
+		double change5Years = Math.round((tickers5Years.get(0).getPriceClose() - tickers5Years.get(tickers5Years.size()-1).getPriceClose())*100.0)/100.0;
+		double changePersent5Years = Math.round(((tickers5Years.get(0).getPriceClose() - tickers5Years.get(tickers5Years.size()-1).getPriceClose())/tickers5Years.get(0).getPriceClose()*100) *100.0)/100.0;
+		
+		List<Ticker> tickersAllTime = repository.findQueryByDateNameAndDateDateBetweenOrderByDateDate(name, LocalDate.of(2000, 1, 1), LocalDate.now()).collect(Collectors.toList());
+		double changeAllTime = Math.round((tickersAllTime.get(0).getPriceClose() - tickersAllTime.get(tickersAllTime.size()-1).getPriceClose())*100.0)/100.0;
+		double changePersentAllTime = Math.round(((tickersAllTime.get(0).getPriceClose() - tickersAllTime.get(tickersAllTime.size()-1).getPriceClose())/tickersAllTime.get(0).getPriceClose()*100) *100.0)/100.0;
+		
+
+		LocalDate dateTo = tickers.get(tickers.size()-1).getDate().getDate();
 		LocalDate dateFrom = dateTo.minusWeeks(52);
 		DateBetweenDto dateBetween = new DateBetweenDto(dateFrom, dateTo);
 		double minPrice = findMinMaxPricesByDatePeriod(dateBetween, name).getMin().getPriceClose();
 		double maxPrice = findMinMaxPricesByDatePeriod(dateBetween, name).getMax().getPriceClose();
-		TickerDto lastTickerDto = modelMapper.map(lastTicker, TickerDto.class);
-		LastPriceDto res = new LastPriceDto(lastTickerDto.getDate(), lastTicker.getPriceClose(), change, changePersent, minPrice, maxPrice);
+		TickerDto lastTickerDto = modelMapper.map(tickers.get(tickers.size()-1), TickerDto.class);
+		LastPriceDto res = new LastPriceDto(lastTickerDto.getDate(), tickers.get(tickers.size()-1).getPriceClose(), change, changePersent, 
+				change5Days, changePersent5Days, changeMonth, changePersentMonth, change6Months, changePersent6Months, 
+				change1Year, changePersent1Year, change5Years, changePersent5Years, changeAllTime, changePersentAllTime, 
+				minPrice, maxPrice);
 		return res;
 	}
 	
@@ -510,7 +542,7 @@ public class TickerServiceImpl implements TickerService {
 		ResponseEntity<ResponseTickerDescriptionDto> responseEntity2 = restTemplate.exchange(requestEntity2, ResponseTickerDescriptionDto.class);
 		TickerDescription tickerDescription = new TickerDescription(responseEntity2.getBody().getTicker(), responseEntity2.getBody().getName(),
 					responseEntity2.getBody().getDescription(), responseEntity2.getBody().getStartDate(), 
-					responseEntity2.getBody().getEndDate(), responseEntity2.getBody().getExchangeCode());
+					responseEntity2.getBody().getExchangeCode());
 		return tickerDescription;
 	}
 	

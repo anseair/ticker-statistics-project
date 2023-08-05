@@ -26,6 +26,5 @@ public class TickerDescription {
 	String name;
 	String description;
 	LocalDate startDate;
-	LocalDate endDate;
 	String exchangeCode;
 }
